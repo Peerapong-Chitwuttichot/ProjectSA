@@ -11,7 +11,7 @@ import {
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import logo from "./assets/logo.png";
 
-import Customer from "./pages/customer";
+import RegisterUsernext from "./pages/register/user";
 import CustomerCreate from "./pages/customer/create";
 import RegisterUser from "./pages/register/user";
 
@@ -95,6 +95,7 @@ const App: React.FC = () => {
                 {/* <Route path="/" element={<Dashboard />} /> */}
                 <Route path="/register/user" element={<RegisterUser />} />
                 <Route path="/customer/create" element={<CustomerCreate />} />
+                <Route path="/register/RegisterUsernext" element={<RegisterUsernext />} />
               </Routes>
         {/* <Layout>
           <Header style={{ padding: 0, background: colorBgContainer }} />
