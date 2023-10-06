@@ -13,6 +13,7 @@ import {
   message,
   Divider,
   Row,
+  Layout,
 } from "antd";
 import {
   AuditOutlined,
@@ -29,6 +30,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { UsersInterface } from "../../../interfaces/IUser";
 import { CreateUser } from "../../../services/https";
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
+const { TextArea } = Input;
+const { Header, Content, Footer, Sider } = Layout;
 
 interface DataType {
   key: string;
@@ -52,15 +55,30 @@ const normFile = (e: any) => {
 function RegisterUser() {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
+  const [formDataPage1, setFormDataPage1] = useState({});
+  const [isPage1Complete, setIsPage1Complete] = useState(false);
 
-  const onFinish = async (values: UsersInterface) => {
+  const handleNavigation = () => {
+    // นำทางไปยังหน้า 'RegisterUsernext' หากหน้าที่ 1 ครบถ้วน
+    if (isPage1Complete) {
+      navigate('/RegisterUsernext');
+    }
+  };
+
+  const onFinishPage1 = async (values: UsersInterface) => {
+    // บันทึกข้อมูลหน้าที่ 1 ลงใน formDataPage1
+    setFormDataPage1(values);
+    setIsPage1Complete(true);
+  };
+
+  const onFinishPage2 = async (values: UsersInterface) => {
     try {
-      const res = await CreateUser(values);
+      // รวบข้อมูลจาก formDataPage1 และ formDataPage2
+      const finalData = { ...formDataPage1, ...values };
+
+      const res = await CreateUser(finalData);
       if (res.status) {
         messageApi.success("บันทึกข้อมูลสำเร็จ");
-        setTimeout(() => {
-          navigate("/customer");
-        }, 2000);
       } else {
         messageApi.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       }
@@ -73,6 +91,9 @@ function RegisterUser() {
 
   return (
     <>
+    {/* <Header style={{ display: 'flex', alignItems: 'center' }}>
+      <div className="demo-logo" />
+    </Header> */}
       <Col xs={24} sm={24} md={24} lg={24} xl={24}>
         <div style={{backgroundColor: "black", display: "grid", placeItems: "center", height: "100vh" }}>
           <Space direction="vertical" size="middle">
@@ -104,7 +125,7 @@ function RegisterUser() {
               <Form
                 name="basic"
                 layout="vertical"
-                onFinish={onFinish}
+                onFinish={onFinishPage1}
                 autoComplete="off"
               >
                 <div style={{ marginBottom: "10px", marginTop: "35px", marginLeft: "30px", marginRight: "30px" }}>
@@ -185,8 +206,39 @@ function RegisterUser() {
                       <Input.Password />
                     </Form.Item>
                   </Col>
+                  <Divider />
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Button className='custom-button2' type="primary" size={size}>
+                    <Form.Item 
+                      className="form-item-wrapper2" 
+                      name="experience" 
+                      label="อธิบายประสบการณ์ล่าสุด" 
+                      rules={[{ required: true, 
+                                  message: 'กรุณากรอก !' }]}>
+                      <TextArea rows={3} placeholder="เช่น ผมทำงานมาแล้วทั่วโลก" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                    <Form.Item 
+                      className="form-item-wrapper2" 
+                      name="skill" 
+                      label="อธิบายทักษะของตัวเอง" 
+                      rules={[{ required: true, 
+                                  message: 'กรุณากรอก !' }]}>
+                      <TextArea rows={3} placeholder="เช่น ผมเก่งเจ๋ง" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                    <Form.Item 
+                      className="form-item-wrapper2" 
+                      name="address" 
+                      label="ที่อยู่ปัจจุบัน" 
+                      rules={[{ required: true, 
+                                  message: 'กรุณากรอก !' }]}>
+                      <TextArea rows={2} placeholder="เช่น บ้านหนองอีกึ่ม" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                    <Button onClick={handleNavigation} className='custom-button2' type="primary" size={size}>
                       ลงทะเบียน
                     </Button>
                     <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -207,19 +259,12 @@ function RegisterUser() {
   );
 };
 
-function RegisterUsernext() {
-  return (
-    <div>
-      <h1>หน้าที่ 2</h1>
-      {/* สร้างฟอร์มหน้าที่ 2 ในนี้ */}
-    </div>
-  );
-}
 
 // const data: DataType[] = [];
 
 // export default function index() {
   
 // }
+
 
 export default RegisterUser;
