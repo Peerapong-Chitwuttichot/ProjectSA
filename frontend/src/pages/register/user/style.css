@@ -84,3 +84,11 @@
     align-items: center;
     width: 100%; /* กำหนดความกว้างให้เต็มขอบฟอร์ม */
 }
+.form-item-wrapper2 {
+    /* display: flex; */
+    /* justify-content: space-between; */
+    align-items: center;
+    width: 100%; /* กำหนดความกว้างให้เต็มขอบฟอร์ม */
+    max-height: 300px; /* กำหนดความสูงสูงสุดของตารางที่คุณต้องการ */
+    overflow: auto;
+}
