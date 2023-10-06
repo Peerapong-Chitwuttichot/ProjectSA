@@ -25,43 +25,43 @@
 }
 
 .space {
-    width: 150px; /* ปรับความกว้างตามที่คุณต้องการ */
-    display: inline-block; /* ต้องการเพื่อให้ width ทำงาน */
+    width: 150px;
+    display: inline-block;
   }
 
 .space2 {
-    width: 30px; /* ปรับความกว้างตามที่คุณต้องการ */
-    display: inline-block; /* ต้องการเพื่อให้ width ทำงาน */
+    width: 30px;
+    display: inline-block;
 }
 
 .space3 {
-    width: 70px; /* ปรับความกว้างตามที่คุณต้องการ */
-    display: inline-block; /* ต้องการเพื่อให้ width ทำงาน */
+    width: 70px;
+    display: inline-block;
 }
   
 .custom-button {
     background-color: #fff6f2;
     border: 2px solid;
     border-color: #ff7518;
-    width: 210px; /* ปรับความกว้างตามที่คุณต้องการ */
-    height: 40px; /* ปรับความสูงตามที่คุณต้องการ */
+    width: 210px;
+    height: 40px;
 }
 .custom-button2 {
     background-color: #ff7518;
-    width: 100px; /* ปรับความกว้างตามที่คุณต้องการ */
-    height: 40px; /* ปรับความสูงตามที่คุณต้องการ */
-    color: #ffffff; /* เปลี่ยนสีของตัวหนังสือเมื่อ hover */
+    width: 100px;
+    height: 40px;
+    color: #ffffff;
     /* border: 1px solid; */
 }
 
 .custom-button2:hover {
-    background-color: #ff9900; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
-    color: #ffffff; /* เปลี่ยนสีของตัวหนังสือเมื่อ hover */
-    border-color: #ff9900; /* เปลี่ยนสีขอบเมื่อ hover */
+    background-color: #ff9900;
+    color: #ffffff;
+    border-color: #ff9900;
 }
 
 .custom-button3 {
-    color: #4ABFD9; /* เปลี่ยนสีของตัวหนังสือเมื่อ hover */
+    color: #4ABFD9;
     /* border: 1px solid; */
 }
 
@@ -70,25 +70,40 @@
 }
 
 .label .sp {
-    line-height: 1px; /* เพิ่มระยะห่างระหว่างบรรทัดเป็น 30px */
+    line-height: 1px;
 }
 
 .form-container {
-    width: 40px; /* ปรับความกว้างของฟอร์มตามที่คุณต้องการ */
-    height: 30px; /* ปรับความสูงของฟอร์มตามที่คุณต้องการ */
+    width: 40px;
+    height: 30px;
   }
 
 .form-item-wrapper {
     /* display: flex; */
     /* justify-content: space-between; */
     align-items: center;
-    width: 100%; /* กำหนดความกว้างให้เต็มขอบฟอร์ม */
+    width: 100%;
 }
 .form-item-wrapper2 {
     /* display: flex; */
     /* justify-content: space-between; */
     align-items: center;
-    width: 100%; /* กำหนดความกว้างให้เต็มขอบฟอร์ม */
-    max-height: 300px; /* กำหนดความสูงสูงสุดของตารางที่คุณต้องการ */
+    width: 100%;
+    max-height: 300px;
     overflow: auto;
+}
+
+.img-back {
+    background-image: url('./back.png');
+    background-size: cover; 
+    background-position: 'center';
+    background-repeat: 'no-repeat';
+    width: '100vw';
+    height: '100vh';
+    background-attachment: fixed;
+  }
+
+.img-back:hover {
+    background-image: url('./back.png');
+    /* สไตล์ CSS อื่น ๆ เมื่อ hover */
 }
