@@ -1,0 +1,86 @@
+/* .label {
+    height: 54px;
+    width: 310px;
+} */
+
+.div {
+    color: #ff7518;
+    font-family: "Inter-Regular", Helvetica;
+    line-height: normal;
+}
+
+.label .text-wrapper {
+    color: #ff7518;
+    font-size: 33px;
+}
+
+.label .span {
+    color: #ff7518;
+    font-size: 20px;
+}
+
+.label .text-wrapper-2 {
+    color: #000000;
+    font-size: 15px;
+}
+
+.space {
+    width: 150px; /* ปรับความกว้างตามที่คุณต้องการ */
+    display: inline-block; /* ต้องการเพื่อให้ width ทำงาน */
+  }
+
+.space2 {
+    width: 30px; /* ปรับความกว้างตามที่คุณต้องการ */
+    display: inline-block; /* ต้องการเพื่อให้ width ทำงาน */
+}
+
+.space3 {
+    width: 70px; /* ปรับความกว้างตามที่คุณต้องการ */
+    display: inline-block; /* ต้องการเพื่อให้ width ทำงาน */
+}
+  
+.custom-button {
+    background-color: #fff6f2;
+    border: 2px solid;
+    border-color: #ff7518;
+    width: 210px; /* ปรับความกว้างตามที่คุณต้องการ */
+    height: 40px; /* ปรับความสูงตามที่คุณต้องการ */
+}
+.custom-button2 {
+    background-color: #ff7518;
+    width: 100px; /* ปรับความกว้างตามที่คุณต้องการ */
+    height: 40px; /* ปรับความสูงตามที่คุณต้องการ */
+    color: #ffffff; /* เปลี่ยนสีของตัวหนังสือเมื่อ hover */
+    /* border: 1px solid; */
+}
+
+.custom-button2:hover {
+    background-color: #ff9900; /* เปลี่ยนสีพื้นหลังเมื่อ hover */
+    color: #ffffff; /* เปลี่ยนสีของตัวหนังสือเมื่อ hover */
+    border-color: #ff9900; /* เปลี่ยนสีขอบเมื่อ hover */
+}
+
+.custom-button3 {
+    color: #4ABFD9; /* เปลี่ยนสีของตัวหนังสือเมื่อ hover */
+    /* border: 1px solid; */
+}
+
+.label .image {
+    font-size: 20px;
+}
+
+.label .sp {
+    line-height: 1px; /* เพิ่มระยะห่างระหว่างบรรทัดเป็น 30px */
+}
+
+.form-container {
+    width: 40px; /* ปรับความกว้างของฟอร์มตามที่คุณต้องการ */
+    height: 30px; /* ปรับความสูงของฟอร์มตามที่คุณต้องการ */
+  }
+
+.form-item-wrapper {
+    /* display: flex; */
+    /* justify-content: space-between; */
+    align-items: center;
+    width: 100%; /* กำหนดความกว้างให้เต็มขอบฟอร์ม */
+}
