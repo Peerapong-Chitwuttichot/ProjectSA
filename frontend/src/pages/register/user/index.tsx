@@ -55,30 +55,16 @@ const normFile = (e: any) => {
 function RegisterUser() {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-  const [formDataPage1, setFormDataPage1] = useState({});
-  const [isPage1Complete, setIsPage1Complete] = useState(false);
 
-  const handleNavigation = () => {
-    // นำทางไปยังหน้า 'RegisterUsernext' หากหน้าที่ 1 ครบถ้วน
-    if (isPage1Complete) {
-      navigate('/RegisterUsernext');
-    }
-  };
-
-  const onFinishPage1 = async (values: UsersInterface) => {
-    // บันทึกข้อมูลหน้าที่ 1 ลงใน formDataPage1
-    setFormDataPage1(values);
-    setIsPage1Complete(true);
-  };
-
-  const onFinishPage2 = async (values: UsersInterface) => {
+  const onFinish = async (values: UsersInterface) => {
     try {
-      // รวบข้อมูลจาก formDataPage1 และ formDataPage2
-      const finalData = { ...formDataPage1, ...values };
-
-      const res = await CreateUser(finalData);
+      const res = await CreateUser(values);
       if (res.status) {
         messageApi.success("บันทึกข้อมูลสำเร็จ");
+        
+        // setTimeout(() => {
+        //   navigate("/register/usernext");
+        // }, 2000);
       } else {
         messageApi.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       }
@@ -95,9 +81,9 @@ function RegisterUser() {
       <div className="demo-logo" />
     </Header> */}
       <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-        <div style={{backgroundColor: "black", display: "grid", placeItems: "center", height: "100vh" }}>
+        <div className='img-back' style={{display: "grid", placeItems: "center", height: "100vh" }}>
           <Space direction="vertical" size="middle">
-            <Card size="small">
+            <Card style={{ height: "120px",marginBottom: "-10px",}}>
               <div className="label" style={{ marginLeft: "30px", marginRight: "30px" }}>
                 <p className="div">
                   {/* <span className="space2"></span> */}
@@ -119,16 +105,18 @@ function RegisterUser() {
                   <span className="space3"></span>
                   <span>สกุล</span>
                 </p> */}
-                
+                <Divider />
               </div>
-              <Divider />
-              <Form
+            </Card>
+            <Form
                 name="basic"
                 layout="vertical"
-                onFinish={onFinishPage1}
+                onFinish={onFinish}
                 autoComplete="off"
-              >
-                <div style={{ marginBottom: "10px", marginTop: "35px", marginLeft: "30px", marginRight: "30px" }}>
+            >
+            <Card size="small" style={{ height: "475px", overflow: "auto" }}>
+              
+                <div style={{ marginBottom: "10px", marginTop: "20px", marginLeft: "30px", marginRight: "30px" }}>
                   <Row gutter={[16, 0]}>
                     <Col xs={24} sm={24} md={24} lg={24} xl={4}>
                       <Form.Item 
@@ -237,20 +225,23 @@ function RegisterUser() {
                       <TextArea rows={2} placeholder="เช่น บ้านหนองอีกึ่ม" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Button onClick={handleNavigation} className='custom-button2' type="primary" size={size}>
-                      ลงทะเบียน
-                    </Button>
-                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    <span className="text-wrapper-2">หรือ</span>
-                    <Button className='custom-button3' type="link">
-                      เข้าสู่ระบบด้วยอีเมล
-                    </Button>
-                  </Col>
                 </div>
 
-              </Form>
+              
             </Card>
+            <Card style={{ height: "85px",marginTop: "5px",}}>
+              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                <Button htmlType="submit" className='custom-button2' type="primary" size={size}>
+                  ลงทะเบียน
+                </Button>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span className="text-wrapper-2">หรือ</span>
+                <Button className='custom-button3' type="link">
+                  เข้าสู่ระบบด้วยอีเมล
+                </Button>
+              </Col>
+            </Card>
+            </Form>
           </Space>
         </div>
       </Col>
@@ -260,11 +251,5 @@ function RegisterUser() {
 };
 
 
-// const data: DataType[] = [];
-
-// export default function index() {
-  
-// }
-
-
 export default RegisterUser;
+
