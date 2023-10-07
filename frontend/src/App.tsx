@@ -14,6 +14,7 @@ import logo from "./assets/logo.png";
 
 import CustomerCreate from "./pages/customer/create";
 import RegisterUser from "./pages/register/user";
+import LoginUser from "./pages/login/user";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -34,7 +35,7 @@ const App: React.FC = () => {
     <Router>
       <Routes>
         <Route path="/register/user" element={<RegisterUser />} />
-        <Route path="/customer/create" element={<CustomerCreate />} />
+        <Route path="/login/user" element={<LoginUser />} />
       </Routes>
     </Router>
   );
