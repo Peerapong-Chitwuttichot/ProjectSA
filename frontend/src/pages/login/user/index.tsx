@@ -131,19 +131,22 @@ function LoginUser() {
                 </div>        
             </Card>
             <Card style={{ height: "85px",marginTop: "-15px",}}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                <Button htmlType="submit" className='custom-button2' type="primary" size={size}>
-                  เข้าสู่ระบบ
-                </Button>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <span className="text-wrapper-2">หรือ</span>
-                <span>&nbsp;&nbsp;</span>
-                <Link to='/register/user' className='custom-button3' type="link">
-                  ลงทะเบียน
-                </Link>
-                <span>&nbsp;&nbsp;</span>
-                <span className="text-wrapper-2">ด้วยอีเมล?</span>
-              </Col>
+              <div className="label" style={{ marginLeft: "18px", marginRight: "30px" }}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Button htmlType="submit" className='custom-button2' type="primary" size={size}>
+                    เข้าสู่ระบบ
+                  </Button>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span className="text-wrapper-2">หรือ</span>
+                  <span>&nbsp;&nbsp;</span>
+                  <Link to='/register/user' className='custom-button3' type="link">
+                    ลงทะเบียน
+                  </Link>
+                  <span>&nbsp;&nbsp;</span>
+                  <span className="text-wrapper-2">ด้วยอีเมล?</span>
+                </Col>
+              </div>
+              
             </Card>
             </Form>
           </Space>
