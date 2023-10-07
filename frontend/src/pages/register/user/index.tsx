@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { 
   Col, 
   Card, 
@@ -30,6 +30,19 @@ const { TextArea } = Input;
 function RegisterUser() {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
+  const [form] = Form.useForm();
+  const [passwordError, setPasswordError] = useState('');
+
+  useEffect(() => {
+    const userPassword = form.getFieldValue('user_pass');
+    const confirmPassword = form.getFieldValue('confirm_password');
+
+    if (userPassword !== confirmPassword) {
+      setPasswordError('รหัสผ่านไม่ตรงกัน');
+    } else {
+      setPasswordError('');
+    }
+  }, [form]);
 
   const onFinish = async (values: UsersInterface) => {
     try {
@@ -37,9 +50,9 @@ function RegisterUser() {
       if (res.status) {
         messageApi.success("บันทึกข้อมูลสำเร็จ");
         
-        // setTimeout(() => {
-        //   navigate("/register/usernext");
-        // }, 2000);
+        setTimeout(() => {
+          navigate("/login/user");
+        }, 2000);
       } else {
         messageApi.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
       }
@@ -99,9 +112,9 @@ function RegisterUser() {
                         name="title_name"
                         label="คำนำหน้า" 
                         rules={[{ required: true, 
-                                  message: 'กรุณาเลือก !' }]}>
-                        <Select 
-                          defaultValue="-เลือก-"
+                                  message: 'กรุณาเลือก!' }]}>
+                        <Select placeholder="เลือก"
+                          // defaultValue="-เลือก-"
                           style={{ width: 90 }}
                           optionLabelProp="label"
                           // onChange={handleChange}
@@ -120,7 +133,7 @@ function RegisterUser() {
                         name="first_name" 
                         label="ชื่อ" 
                         rules={[{ required: true, 
-                                  message: 'กรุณากรอก !' }]}>
+                                  message: 'กรุณากรอกชื่อ!' }]}>
                         <Input placeholder="เช่น คนดี" />
                       </Form.Item>
                     </Col>
@@ -130,7 +143,7 @@ function RegisterUser() {
                         name="last_name" 
                         label="นามสกุล" 
                         rules={[{ required: true, 
-                                  message: 'กรุณากรอก !' }]}>
+                                  message: 'กรุณากรอกนามสกุล!' }]}>
                         <Input placeholder="เช่น จัง" />
                       </Form.Item>
                     </Col>
@@ -147,7 +160,7 @@ function RegisterUser() {
                         },
                         {
                           required: true,
-                          message: "กรุณากรอก !",
+                          message: "กรุณากรอกอีเมล!",
                         },
                       ]}
                     >
@@ -162,12 +175,36 @@ function RegisterUser() {
                       rules={[
                         {
                           required: true,
-                          message: "กรุณากรอก !",
+                          message: "กรุณากรอกรหัสผ่าน!",
                         },
                       ]}
                     >
                       <Input.Password />
                     </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Form.Item
+                    name="confirm"
+                    label="ยืนยันรหัสผ่าน"
+                    dependencies={['user_pass']}
+                    hasFeedback
+                    rules={[
+                      {
+                        required: true,
+                        message: 'กรุณายืนยันรหัสผ่าน!',
+                      },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('user_pass') === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('รหัสผ่านไม่ตรงกัน!'));
+                        },
+                      }),
+                    ]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
                   </Col>
                   <Divider />
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
@@ -176,7 +213,7 @@ function RegisterUser() {
                       name="experience" 
                       label="อธิบายประสบการณ์ล่าสุด" 
                       rules={[{ required: true, 
-                                  message: 'กรุณากรอก !' }]}>
+                                  message: 'กรุณากรอก!' }]}>
                       <TextArea rows={3} placeholder="เช่น ผมทำงานมาแล้วทั่วโลก" />
                     </Form.Item>
                   </Col>
@@ -186,7 +223,7 @@ function RegisterUser() {
                       name="skill" 
                       label="อธิบายทักษะของตัวเอง" 
                       rules={[{ required: true, 
-                                  message: 'กรุณากรอก !' }]}>
+                                  message: 'กรุณากรอก!' }]}>
                       <TextArea rows={3} placeholder="เช่น ผมเก่งเจ๋ง" />
                     </Form.Item>
                   </Col>
@@ -195,9 +232,9 @@ function RegisterUser() {
                       name="address" 
                       label="ที่อยู่ปัจจุบัน" 
                       rules={[{ required: true, 
-                                message: 'กรุณาเลือก !' }]}>
-                      <Select 
-                        defaultValue="--เลือกจังหวัด--"
+                                message: 'กรุณาเลือกจังหวัด!' }]}>
+                      <Select placeholder="เลือกจังหวัด"
+                        // defaultValue="--เลือกจังหวัด--"
                         style={{ width: 610 }}
                         optionLabelProp="label"
                         // onChange={handleChange}
@@ -285,19 +322,21 @@ function RegisterUser() {
                 </div>              
             </Card>
             <Card style={{ height: "85px",marginTop: "-15px",}}>
-              <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                <Button htmlType="submit" className='custom-button2' type="primary" size={size}>
-                  ลงทะเบียน
-                </Button>
-                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <span className="text-wrapper-2">หรือ</span>
-                <span>&nbsp;&nbsp;</span>
-                <Link to='/login/user' className='custom-button3' type="link">
-                  เข้าสู่ระบบ
-                </Link>
-                <span>&nbsp;&nbsp;</span>
-                <span className="text-wrapper-2">ด้วยอีเมล?</span>
-              </Col>
+              <div className="label" style={{ marginLeft: "18px", marginRight: "30px" }}>
+                <Col xs={24} sm={24} md={24} lg={24} xl={24}>
+                  <Button htmlType="submit" className='custom-button2' type="primary" size={size}>
+                    ลงทะเบียน
+                  </Button>
+                  <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  <span className="text-wrapper-2">หรือ</span>
+                  <span>&nbsp;&nbsp;</span>
+                  <Link to='/login/user' className='custom-button3' type="link">
+                    เข้าสู่ระบบ
+                  </Link>
+                  <span>&nbsp;&nbsp;</span>
+                  <span className="text-wrapper-2">ด้วยอีเมล?</span>
+                </Col>
+              </div>
             </Card>
             </Form>
           </Space>
