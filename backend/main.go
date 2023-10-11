@@ -1,21 +1,21 @@
 package main
 
 import (
-	"github.com/Peerapong-Chitwuttichot/ProjectSA/controller"
-	"github.com/Peerapong-Chitwuttichot/ProjectSA/entity"
+	"github.com/Peerapong-Chitwuttichot/oparetor-jobjob/controller"
 	"github.com/gin-gonic/gin"
+	"github.com/Peerapong-Chitwuttichot/oparetor-jobjob/entity"
 )
 
 func main() {
 	entity.SetupDatabase()
 	r := gin.Default()
 	r.Use(CORSMiddleware())
-	// Oparetor Routes
-	r.GET("/oparetor", controller.ListOparetors)
+	// oparetor Routes
+	r.GET("/oparetors", controller.ListOparetors)
 	r.GET("/oparetor/:id", controller.GetOparetor)
-	r.POST("/oparetor", controller.CreateOparetor)
-	r.PATCH("/oparetor", controller.UpdateOparetor)
-	r.DELETE("/oparetor/:id", controller.DeleteOparetor)
+	r.POST("/oparetors", controller.CreateOparetor)
+	r.PATCH("/oparetors", controller.UpdateOparetor)
+	r.DELETE("/oparetors/:id", controller.DeleteOparetor)
 	// Run the server
 	r.Run()
 }
