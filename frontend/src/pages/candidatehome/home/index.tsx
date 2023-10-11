@@ -12,6 +12,8 @@ import {
   Row,
   Layout,
   Select,
+  Table,
+  TableProps,
 } from "antd";
 import {
   AuditOutlined,
@@ -27,6 +29,8 @@ import {
   FormOutlined,
   CopyOutlined,
   SnippetsOutlined,
+  UserDeleteOutlined,
+  UserAddOutlined,
 } from "@ant-design/icons";
 import "./style.css";
 import { Link, useNavigate, } from "react-router-dom";
@@ -35,12 +39,92 @@ import { CreateCandidatepost } from "../../../services/https";
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import { Header } from 'antd/es/layout/layout';
 import { Image } from 'antd';
+import { ColumnsType, ExpandableConfig } from 'antd/es/table/interface';
 const { TextArea } = Input;
+
+interface DataType {
+  key: number;
+  name: string;
+  JobPost: string;
+  detail: string;
+  description: string;
+}
+
+const data: DataType[] = [];
+  for (let i = 1; i <= 20; i++) {
+    data.push({
+      key: i,
+      name: 'John Brown',
+      JobPost: String(`${i}2`),
+      detail: `New York No. ${i} Lake Park`,
+      description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
+    });
+  }
+const defaultExpandable = { expandedRowRender: (record: DataType) => <p>{record.description}</p> };
+// const [expandable, setExpandable] = useState<ExpandableConfig<DataType> | undefined>(
+//     defaultExpandable,
+//   );
+  
+// const [tableLayout, setTableLayout] = useState();
+// const tableProps: TableProps<DataType> = {
+  
+//     expandable,
+//     tableLayout,
+//   };
 
 function Candidatehome() {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
-
+  const columnsCandidate: ColumnsType<DataType> = [
+    {
+      title: 'หัวข้อประกาศงาน',
+      dataIndex: 'name',
+      align: 'center',
+      width: '15%' ,
+    },
+    {
+      title: 'จำนวนผู้สมัคร',
+      dataIndex: 'JobPost',
+      align: 'center',
+      width: '20%' ,
+      
+    },
+    {
+      
+      title: 'รายละเอียด',
+      dataIndex: 'detail',
+      align: 'center',
+      width: '40%' ,
+    },
+  
+    // {
+      
+    //   title: 'Selection' ,
+    //   align: 'center',
+    //   width: '15%' ,
+    //   render: () => (
+    //     <Space >
+   
+    //       <Button >
+  
+    //         Delete
+    //         <UserDeleteOutlined />
+  
+    //       </Button>
+  
+    //       {/* <Button onClick={handleAdd}>
+    //         <Space>
+  
+    //           Add
+    //           <UserAddOutlined />
+  
+    //         </Space>
+    //       </Button> */}
+  
+    //     </Space>
+    //   ),
+    // },
+  ];
 
   const onFinish = async (values: UsersInterface) => {
     try {
@@ -58,6 +142,8 @@ function Candidatehome() {
       console.error(error);
     }
   };
+
+  
 
   const [size, setSize] = useState<SizeType>('large'); // default is 'middle'
 
@@ -138,7 +224,7 @@ function Candidatehome() {
         <div className='img-back' style={{display: "grid", placeItems: "center", height: "100vh" }}>
           <Space direction="vertical" size="middle">
             <Card style={{ height: "200px",marginBottom: "0px",}}>
-              <div className="label" style={{ marginLeft: "100px", marginRight: "10px" }}>
+              <div className="label" style={{ marginLeft: "100px", marginRight: "10px"}}>
                 <p className="div">
                   {/* <span className="space2"></span> */}
                 <Row gutter={[16, 0]}>
@@ -149,7 +235,7 @@ function Candidatehome() {
                   fontWeight: 'bold',
                   height: '14vh',
                   marginTop: '1px',
-                  marginLeft: '25px',
+                  marginLeft: '150px',
                   }}>
                   <FormOutlined  style={{ color: 'green ' }}/> {/* คงความเหมือนเดิมของไอคอน */}
                   
@@ -164,7 +250,7 @@ function Candidatehome() {
                   fontWeight: 'bold',
                   height: '14vh',
                   marginTop: '1px',
-                  marginLeft: '50px',
+                  marginLeft: '275px',
                   }}>
                   <CopyOutlined style={{ color: 'red' }} /> {/* คงความเหมือนเดิมของไอคอน */}
                   
@@ -178,7 +264,7 @@ function Candidatehome() {
                   fontWeight: 'bold',
                   height: '14vh',
                   marginTop: '1px',
-                  marginLeft: '75px',
+                  marginLeft: '425px',
                   }}>
                   <SnippetsOutlined style={{ color: 'orange' }}/> {/* คงความเหมือนเดิมของไอคอน */}
                   
@@ -188,15 +274,15 @@ function Candidatehome() {
                   
                 </Row>
                   
-                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ fontSize: '18px' ,marginLeft: '5px',color: 'green' }} >
+                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ fontSize: '18px' ,marginLeft: '125px',color: 'green' }} >
                     โพสต์ประกาศงาน
                   </Link>
                   <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> 
-                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ fontSize: '18px' ,marginLeft: 'px',color: 'red' }}>
+                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ fontSize: '18px' ,marginLeft: '270px',color: 'red' }}>
                     รายชื่อผู้สมัคร
                   </Link>
                   <span>&nbsp;&nbsp;&nbsp;</span> 
-                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ fontSize: '18px' ,marginLeft: '5px',color: 'orange' }}>
+                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ fontSize: '18px' ,marginLeft: '290px',color: 'orange' }}>
                     ดูประกาศงานฉบับร่าง
                   </Link>
                   {/* <span className="space2"></span> */}
@@ -221,18 +307,37 @@ function Candidatehome() {
                 onFinish={onFinish}
                 autoComplete="off"
             >
-            {/* <Card size="small" style={{ height: "220px"}}>
-                <div style={{ marginBottom: "10px", marginTop: "20px", marginLeft: "30px", marginRight: "30px" }}>
-                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                  <span className="text-wrapper-2" style={{ fontSize: '18px' ,marginLeft: '5px',color: 'orange' }}  >โพสต์ประกาศงานของฉัน</span>
-                  <span className="text-wrapper-2" style={{ fontSize: '18px' ,marginLeft: '300px',color: 'orange' }}  >ผู้สมัคร</span>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    
-                  </Col>
-                  <Divider />
-                </div>        
-            </Card> */}
+            <Card style={{padding: 24, minHeight: 240, background: '#d9d9d9'}} >
+
+<>
+            <Form
+            layout="inline"
+            className="components-table-demo-control-bar"
+            style={{ marginBottom: 25 }}
+            >
+
+           {/* <Divider></Divider> */}
+
+          </Form>
+  
+          <Table
+          // {...tableProps}
+
+          bordered
+          scroll={{ x: '100%', y: 240 }}
+
+          size="middle"
+    
+          columns={columnsCandidate}
+          dataSource={data}
+    
+        //   footer={() => (
+        //   <div style={{ textAlign: 'center' }}>Suranaree University of Technology</div>
+        // )}
+        />
+  
+</>
+</Card>
             {/* <Card style={{ height: "85px",marginTop: "-15px",}}>
               <div className="label" style={{ marginLeft: "18px", marginRight: "30px" }}>
                 <Col xs={24} sm={24} md={24} lg={24} xl={24}>

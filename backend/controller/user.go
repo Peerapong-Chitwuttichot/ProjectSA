@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/supachaicharoen/jobjob-project/entity"
+	"github.com/top002200/ProjectSA/entity"
 )
 
 // POST /candidateposts

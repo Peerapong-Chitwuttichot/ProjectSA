@@ -1,4 +1,4 @@
-module github.com/supachaicharoen/jobjob-project
+module github.com/top002200/ProjectSA
 
 go 1.19
 
