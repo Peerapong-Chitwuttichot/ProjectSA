@@ -13,8 +13,8 @@ import { Breadcrumb, Layout, Menu, theme } from "antd";
 import logo from "./assets/logo.png";
 
 
-import Candidatepost from "./pages/register/user";
-import LoginUser from "./pages/login/user";
+import Candidatepost from "./pages/candidate/post";
+import Candidatehome from "./pages/candidatehome/home";
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -34,8 +34,8 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/register/user" element={<Candidatepost />} />
-        <Route path="/login/user" element={<LoginUser />} />
+        <Route path="/candidate/post" element={<Candidatepost />} />
+        <Route path="/candidatehome/home" element={<Candidatehome />} />
       </Routes>
     </Router>
   );
