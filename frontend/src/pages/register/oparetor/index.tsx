@@ -121,26 +121,6 @@ function RegisterOparetor() {
                   }}
                 >
                   <Row gutter={[16, 0]}>
-                    {/* <Col  xs={24} sm={24} md={24} lg={24} xl={4}>
-                      <Form.Item
-                        name="title_name"
-                        label="คำนำหน้า" 
-                        rules={[{ required: true, 
-                                  message: 'กรุณาเลือก!' }]}>
-                        <Select placeholder="เลือก"
-                          // defaultValue="-เลือก-"
-                          style={{ width: 90 }}
-                          optionLabelProp="label"
-                          // onChange={handleChange}
-                          options={[
-                            { value: 'นาย', label: 'นาย' },
-                            { value: 'นาวสาว', label: 'นางสาว' },
-                            { value: 'mr.', label: 'Mr.' },
-                            { value: 'mrs.', label: 'Mrs.'},
-                          ]}
-                        />
-                      </Form.Item>
-                    </Col> */}
                     <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                       <Form.Item
                         className="form-item-wrapper"
@@ -229,30 +209,7 @@ function RegisterOparetor() {
                       />
                     </Form.Item>
                   </Col>
-                  {/* <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item
-                      name="address"
-                      label="ที่อยู่ปัจจุบัน"
-                      rules={[
-                        { required: true, message: "กรุณาเลือกจังหวัด!" },
-                      ]}
-                    >
-                      <Select
-                        placeholder="เลือกจังหวัด"
-                        // defaultValue="--เลือกจังหวัด--"
-                        style={{ width: 610 }}
-                        optionLabelProp="label"
-                        // onChange={handleChange}
-                        options={[
-                          { value: "กรุงเทพมหานคร", label: "กรุงเทพมหานคร" },
-                          { value: "กาญจนบุรี", label: "กาญจนบุรี" },
-                          { value: "กาฬสินธุ์", label: "กาฬสินธุ์" },
-                          { value: "กำแพงเพชร", label: "กำแพงเพชร" },
-                          { value: "ขอนแก่น", label: "ขอนแก่น" },
-                        ]}
-                      />
-                    </Form.Item>
-                  </Col> */}
+                  
                 </div>
               </Card>
               <Card style={{ height: "85px", marginTop: "-15px" }}>
