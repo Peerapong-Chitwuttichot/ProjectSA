@@ -1,12 +1,14 @@
 package entity
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
-type Oparetor_Account struct {
+type Oparetor_account struct {
 	gorm.Model
-	Op_email    string `gorm:"uniqueIndex"`
+	Op_email    string 
 	Op_password string
-	Com_name    string `gorm:"uniqueIndex"`
+	Com_name    string
 	Address     string
 	Avatar      string
 }
