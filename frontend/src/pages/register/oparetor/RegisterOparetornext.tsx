@@ -127,17 +127,7 @@ function RegisterOparetornext() {
                                   message: 'กรุณากรอก !' }]}>
                         <Input placeholder="เช่น นาย นางสาว" />
                       </Form.Item>
-                      {/* <Select 
-                        defaultValue="โปรดเลือก"
-                        style={{ width: 120 }}
-                        onChange={handleChange}
-                        options={[
-                          { value: 'นาย', label: 'นาย' },
-                          { value: 'นาวสาว', label: 'นางสาว' },
-                          { value: 'mr.', label: 'Mr.' },
-                          { value: 'mrs.', label: 'Mrs.'},
-                        ]}
-                      /> */}
+
                     </Col>
                     <Col xs={24} sm={24} md={24} lg={24} xl={10}>
                       <Form.Item 
@@ -195,36 +185,7 @@ function RegisterOparetornext() {
                     </Form.Item>
                   </Col>
                   <Divider />
-                  {/* <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item 
-                      className="form-item-wrapper2" 
-                      name="experience" 
-                      label="อธิบายประสบการณ์ล่าสุด" 
-                      rules={[{ required: true, 
-                                  message: 'กรุณากรอก !' }]}>
-                      <TextArea rows={3} placeholder="เช่น ผมทำงานมาแล้วทั่วโลก" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item 
-                      className="form-item-wrapper2" 
-                      name="skill" 
-                      label="อธิบายทักษะของตัวเอง" 
-                      rules={[{ required: true, 
-                                  message: 'กรุณากรอก !' }]}>
-                      <TextArea rows={3} placeholder="เช่น ผมเก่งเจ๋ง" />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-                    <Form.Item 
-                      className="form-item-wrapper2" 
-                      name="address" 
-                      label="ที่อยู่ปัจจุบัน" 
-                      rules={[{ required: true, 
-                                  message: 'กรุณากรอก !' }]}>
-                      <TextArea rows={2} placeholder="เช่น บ้านหนองอีกึ่ม" />
-                    </Form.Item>
-                  </Col> */}
+
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Button htmlType="submit" className='custom-button2' type="primary" size={size}>
                       ลงทะเบียน
