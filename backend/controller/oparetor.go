@@ -3,13 +3,13 @@ package controller
 import (
 	"net/http"
 
+	"github.com/Peerapong-Chitwuttichot/oparetor-jobjob/entity"
 	"github.com/gin-gonic/gin"
-	"github.com/Peerapong-Chitwuttichot/ProjectSA/entity"
 )
 
-// POST /oparetors
+// POST /oparetor
 func CreateOparetor(c *gin.Context) {
-	var oparetor entity.Oparetor_Account
+	var oparetor entity.Oparetor_account
 	if err := c.ShouldBindJSON(&oparetor); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -23,7 +23,7 @@ func CreateOparetor(c *gin.Context) {
 
 // GET /oparetor/:id
 func GetOparetor(c *gin.Context) {
-	var oparetor entity.Oparetor_Account
+	var oparetor entity.Oparetor_account
 	id := c.Param("id")
 	if err := entity.DB().Raw("SELECT * FROM oparetor_account WHERE oparetor_id = ?", id).Scan(&oparetor).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
@@ -34,7 +34,7 @@ func GetOparetor(c *gin.Context) {
 
 // GET /oparetors
 func ListOparetors(c *gin.Context) {
-	var oparetors []entity.Oparetor_Account
+	var oparetors []entity.Oparetor_account
 	if err := entity.DB().Raw("SELECT * FROM oparetor_account").Scan(&oparetors).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -54,7 +54,7 @@ func DeleteOparetor(c *gin.Context) {
 
 // PATCH /oparetors
 func UpdateOparetor(c *gin.Context) {
-	var oparetor entity.Oparetor_Account
+	var oparetor entity.Oparetor_account
 	if err := c.ShouldBindJSON(&oparetor); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
