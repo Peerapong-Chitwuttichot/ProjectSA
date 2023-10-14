@@ -11,9 +11,10 @@ func main() {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 	// User Routes
-	r.GET("/users", controller.ListUsers)
+	r.GET("/users/get", controller.ListUsers)
 	r.GET("/user/:id", controller.GetUser)
 	r.POST("/users", controller.CreateUser)
+	r.POST("/users/login", controller.UserLogin)
 	r.PATCH("/users", controller.UpdateUser)
 	r.DELETE("/users/:id", controller.DeleteUser)
 	// Run the server
@@ -25,7 +26,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
