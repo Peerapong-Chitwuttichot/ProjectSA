@@ -35,7 +35,7 @@ func GetCandidatepost(c *gin.Context) {
 // GET /candidateposts
 func ListCandidateposts(c *gin.Context) {
 	var candidateposts []entity.Candidatepost
-	if err := entity.DB().Raw("SELECT * FROM candidatepost_account").Scan(&candidateposts).Error; err != nil {
+	if err := entity.DB().Raw("SELECT * FROM candidateposts").Scan(&candidateposts).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}

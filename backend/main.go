@@ -16,6 +16,7 @@ func main() {
 	r.POST("/candidateposts", controller.CreateCandidatepost)
 	r.PATCH("/candidateposts", controller.UpdateCandidatepost)
 	r.DELETE("/candidateposts/:id", controller.DeleteCandidatepost)
+	
 	// Run the server
 	r.Run()
 }

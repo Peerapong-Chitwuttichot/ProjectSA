@@ -11,6 +11,8 @@ import {
   Row,
   Layout,
   Select,
+  Drawer,
+  Avatar,
 } from "antd";
 import {
   AuditOutlined,
@@ -23,6 +25,7 @@ import {
   SolutionOutlined,
   NotificationOutlined,
   HomeOutlined,
+  MenuOutlined,
 } from "@ant-design/icons";
 import "./style.css";
 import { Link, useNavigate, } from "react-router-dom";
@@ -56,7 +59,7 @@ function Candidatepost() {
         messageApi.success("บันทึกข้อมูลสำเร็จ");
 
         setTimeout(() => {
-          navigate("/candidate/home");
+          navigate("/candidatehome/home");
         }, 2000);
       } else {
         messageApi.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
@@ -68,76 +71,129 @@ function Candidatepost() {
 
   const [size, setSize] = useState<SizeType>('large'); // default is 'middle'
 
+    // ส่วนของ Header and sider // อยู่นอก return
+const [open, setOpen] = useState(false);
+const showDrawer = () => {
+  setOpen(true);
+};
+
+const onClose = () => {
+  setOpen(false);
+};
+
+const handleLogout = () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("id");
+  window.location.href = "/";
+}
+
+
   return (
     <>
       {/* <Header style={{ display: 'flex', alignItems: 'center' }}>
       <div className="demo-logo" />
     </Header> */}
       <Layout>
-        <Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
-          <Header style={{ padding: 0, background: '#333333' }}>
+      <Drawer
+        title="JOBJOB MENU"
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        open={open}
+        key="right"
+      >
+        <div >
+          
+        <Row>
+          <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" style={{ cursor: 'pointer', transform: 'scale(1.5)' }}>
 
-            <div style={{
-              alignItems: 'center', display: 'grid',
-              gridTemplateColumns: 'repeat(6, 1fr)', gridGap: '20px',
-              justifySelf: 'center', maxWidth: '99%'
-            }}>
+          </Avatar>
+          <text style={{
+            fontSize: '20px', marginLeft: '25px',
+            fontWeight: 'bolder', color: 'white'
+          }}>
+            <span style={{ color: '#ff7518' }}>Supachai</span>
+            <span>B</span>
+            <span style={{ color: '#ff7518' }}>Charoen</span>
+          </text>
+        </Row>
 
+        </div>
 
+       <p>
+       <Link to='/candidatehome/home'  type="link" >
+          <Button icon={<HomeOutlined style={{ marginLeft: '-35px'}}/>} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
+                              marginTop: '5px', width: '100%'}}> 
+                Home 
+          </Button>
+          </Link>
+        </p>
 
-              <text style={{
-                fontSize: '50px', marginLeft: '30px',
-                fontWeight: 'bolder', color: 'white', justifySelf: 'center',
-                height: '-25px'
-              }}>
-                <span style={{ color: '#ff7518' }}>JO</span>
-                <span>B</span>
-                <span style={{ color: '#ff7518' }}>JO</span>
-                <span>B</span>
+        <p>
+          <Button icon={<UserOutlined style={{ marginLeft: '-0px'}}/>} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
+                              marginTop: '5px', width: '100%'}}> 
+                My Profile 
+          </Button>
+        </p>
 
-              </text>
+        <p>
+          <Button icon={<NotificationOutlined style={{ marginLeft: '-15px'}}/>} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
+                              marginTop: '5px', width: '100%', justifySelf: 'auto'}}> 
+                Job Post 
+          </Button>
+        </p>
 
-              <Button icon={<HomeOutlined />} style={{
-                fontSize: '18px', fontWeight: 'bold', height: '5vh',
-                marginTop: '5px'
-              }}>
-                Home
-              </Button>
+        <p>
+          <Button icon={<SolutionOutlined />} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
+                              marginTop: '5px', width: '100%'}}> 
+                Candidate 
+          </Button>
+        </p>
 
-              <Button icon={<NotificationOutlined />} style={{
-                fontSize: '18px', fontWeight: 'bold', height: '5vh',
-                marginTop: '5px'
-              }}>
-                Job Post
-              </Button>
+        <p>
+        <Button onClick={handleLogout} icon={<LoginOutlined style={{ marginLeft: '-25px'}}/>} 
+                style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
+                        marginTop: '5px', width: '100%'}}> 
 
-              <Button icon={<SolutionOutlined />} style={{
-                fontSize: '18px', fontWeight: 'bold', height: '5vh',
-                marginTop: '5px'
-              }}>
-                Candidate
-              </Button>
+              Logout 
+            </Button>
+        </p>
 
-              <Button icon={<UserOutlined />} style={{
-                fontSize: '18px', fontWeight: 'bold', height: '5vh',
-                marginTop: '5px'
-              }}>
-                My Profile
+        
 
-              </Button>
+        
 
-              <Button icon={<LoginOutlined />} style={{
-                fontSize: '18px', fontWeight: 'bold', height: '5vh',
-                marginTop: '5px'
-              }}>
-                Logout
-              </Button>
+      </Drawer>
 
-            </div>
+      <Header style={{ padding: 0, background: '#333333' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between', // ชิดด้านขวา
+          maxWidth: '99%'
+        }}>
+          <text style={{
+            fontSize: '50px', marginLeft: '30px',
+            fontWeight: 'bolder', color: 'white'
+          }}>
+            <span style={{ color: '#ff7518' }}>JO</span>
+            <span>B</span>
+            <span style={{ color: '#ff7518' }}>JO</span>
+            <span>B</span>
+          </text>
+          
 
-          </Header>
+          <div style={{ flex: 1 }}></div> {/* เพิ่มพื้นที่ที่ว่างเพื่อทำให้ปุ่ม Logout ชิดขวา */}
 
-        </Space>
+          <Button onClick={showDrawer} icon={<MenuOutlined />} style={{
+            fontSize: '18px', fontWeight: 'bold', height: '5vh',
+            marginTop: '0px', marginLeft: '20px'
+          }}>
+            MENU
+          </Button>
+
+        </div>
+      </Header >
 
       </Layout>
       {contextHolder}
