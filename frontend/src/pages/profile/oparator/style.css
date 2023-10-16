@@ -11,3 +11,9 @@
     margin-Left: 0;
     border-Radius: 50;
 }
+
+.profilebg1 {
+    background-color: #878787; /* เปลี่ยนสีพื้นหลังเทาที่นี่ */
+    margin-right: 50px;
+    transform: scale(1.5);
+  }

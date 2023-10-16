@@ -12,7 +12,7 @@ func DB() *gorm.DB {
 }
 
 func SetupDatabase() {
-	database, err := gorm.Open(sqlite.Open("jobjob.db"), &gorm.Config{})
+	database, err := gorm.Open(sqlite.Open("oparator-jobjob.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}

@@ -101,9 +101,11 @@ async function UpdateOparator(data: OparatorsInterface) {
 
 
 
+
 export {
   GetOparators,
   CreateOparator,
   OparatorLogin,
-  UpdateOparator
+  UpdateOparator,
+
 };

@@ -9,6 +9,56 @@ import (
 )
 
 // POST /oparators
+// func CreateOparator(c *gin.Context) {
+// 	var oparator entity.Oparator_account
+// 	var existingOperator entity.Oparator_account
+// 	if err := entity.DB().Where("oparator_email = ?", oparator.Oparator_email).First(&existingOperator).Error; err == nil {
+// 		// มีอีเมลนี้อยู่ในฐานข้อมูลแล้ว
+// 		c.JSON(http.StatusConflict, gin.H{"status": "error", "message": "อีเมลซ้ำกัน"})
+// 		return
+// 	}
+// 	// บันทึกข้อมูลลงในฐานข้อมูล (หลังจากการตรวจสอบความซ้ำ)
+// 	if err := entity.DB().Create(&oparator).Error; err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	if err := c.ShouldBindJSON(&oparator); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+// 	if err := entity.DB().Create(&oparator).Error; err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+// 	c.JSON(http.StatusOK, gin.H{"data": oparator})
+// }
+
+// POST /oparators
+// POST /oparators
+// func CreateOparator(c *gin.Context) {
+// 	var oparator entity.Oparator_account
+// 	if err := c.ShouldBindJSON(&oparator); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+// 	// ตรวจสอบว่าอีเมลซ้ำกันหรือไม่
+// 	existingOperator := entity.Oparator_account{}
+// 	if err := entity.DB().Where("oparator_email = ?", oparator.Oparator_email).First(&existingOperator).Error; err == nil {
+// 		// มีอีเมลซ้ำกัน
+// 		c.JSON(http.StatusBadRequest, gin.H{"status": "error", "message": "อีเมลนี้มีอยู่ในระบบอยู่แล้ว"})
+// 		return
+// 	}
+
+// 	// ถ้าไม่มีอีเมลซ้ำกัน ค่อยทำการบันทึกข้อมูล
+// 	if err := entity.DB().Create(&oparator).Error; err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+// 		return
+// 	}
+
+//		c.JSON(http.StatusOK, gin.H{"data": oparator})
+//	}
 func CreateOparator(c *gin.Context) {
 	var oparator entity.Oparator_account
 	if err := c.ShouldBindJSON(&oparator); err != nil {
@@ -53,7 +103,6 @@ func DeleteOparator(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": id})
 }
 
-// PATCH /oparators
 func UpdateOparator(c *gin.Context) {
 	var oparator entity.Oparator_account
 	var result entity.Oparator_account
@@ -62,7 +111,8 @@ func UpdateOparator(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// ค้นหา oparator ด้วย id
+
+	// ค้นหา oparator ด้วย ID
 	if tx := entity.DB().Where("id = ?", oparator.ID).First(&result); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "oparator not found"})
 		return

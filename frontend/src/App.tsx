@@ -1,18 +1,16 @@
-import React, { useState } from "react";
-import { UserOutlined, DashboardOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
+import React, {  } from "react";
+
+
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
-  Navigate,
-  useNavigate,
-  BrowserRouter,
+
 } from "react-router-dom";
 
 
 import ProfileOparator from "./pages/profile/oparator";
+import PrivacyOparator from "./pages/privacy/oparator";
 import RegisterOparator from './pages/register/oparator';
 import LoginOparator from "./pages/login/oparator";
 
@@ -38,8 +36,8 @@ const App: React.FC = () => {
     return (
       <Router>
         <Routes>
-          <Route path="/profile/oparator" element={<Navigate to="/" />} />
-          <Route path="/" element={<LoginOparator />} />
+          {/* <Route path="/profile/oparator" element={<Navigate to="/" />} /> */}
+          <Route path="/login/oparator" element={<LoginOparator />} />
           {/* <Route element={<Navigate to="/login/oparator" />} /> */}
           <Route path="/register/oparator" element={<RegisterOparator />} />
         </Routes>
@@ -82,6 +80,7 @@ const App: React.FC = () => {
         <Route path="/register/oparator" element={<RegisterOparator />} />
         <Route path="/login/oparator" element={<LoginOparator />} />
         <Route path="/profile/oparator" element={<ProfileOparator />} />
+        <Route path="/privacy/oparator" element={<PrivacyOparator />} />
       </Routes>
     </Router>
   );

@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Col,
   Card,
@@ -9,25 +9,16 @@ import {
   Input,
   message,
   Divider,
-  Row,
-  Layout,
-  Select,
+
 } from "antd";
-import {
-  AuditOutlined,
-  UserOutlined,
-  PieChartOutlined,
-  StockOutlined,
-  DownOutlined,
-  DownloadOutlined,
-} from "@ant-design/icons";
+
 import "./style.css";
-import axios from 'axios';
+
 import { Link, useNavigate, useParams, } from "react-router-dom";
 import { OparatorsInterface } from "../../../interfaces/IOparator";
 import { CreateOparator, OparatorLogin } from "../../../services/https";
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
-import { OparatorsIDInterface } from '../../../interfaces/IOparatorid';
+
 const { TextArea } = Input;
 
 
@@ -72,7 +63,7 @@ function LoginOparator() {
         <div className='img-back' style={{ display: "grid", placeItems: "center", height: "100vh" }}>
           <text style={{
             fontSize: '60px', marginLeft: '0px',
-            marginTop: '0px',
+            marginTop: '-80px',
             fontWeight: 'bolder', color: 'white'
           }}>
             <span style={{ color: '#ff7518' }}>JO</span>
@@ -147,7 +138,7 @@ function LoginOparator() {
                     <Button htmlType="submit" className='custom-button2' type="primary" size={size}>
                       เข้าสู่ระบบ
                     </Button>
-                    <span>&nbsp;&nbsp;F&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span className="text-wrapper-2">หรือ</span>
                     <span>&nbsp;&nbsp;</span>
                     <Link to='/register/oparator' className='custom-button3' type="link">

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Col,
   Card,
@@ -9,17 +9,9 @@ import {
   message,
   Divider,
   Row,
-  Layout,
-  Select,
+
 } from "antd";
-import {
-  AuditOutlined,
-  UserOutlined,
-  PieChartOutlined,
-  StockOutlined,
-  DownOutlined,
-  DownloadOutlined,
-} from "@ant-design/icons";
+
 import "./style.css";
 import { Link, useNavigate, } from "react-router-dom";
 import { OparatorsInterface } from "../../../interfaces/IOparator";
@@ -31,7 +23,7 @@ function RegisterOparator() {
   const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
-  const [passwordError, setPasswordError] = useState("");
+  const [, setPasswordError] = useState("");
 
   useEffect(() => {
     const oparatorPassword = form.getFieldValue("oparator_pass");
@@ -50,18 +42,18 @@ function RegisterOparator() {
       if (res.status) {
         messageApi.success("บันทึกข้อมูลสำเร็จ");
 
-        // setTimeout(() => {
-        //   navigate("/login/oparator");
-        // }, 2000);
+        setTimeout(() => {
+          navigate("/login/oparator");
+        }, 2000);
       } else {
-        messageApi.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+        messageApi.error("อีเมลหรือชื่อบริษัทซ้ำ");
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const [size, setSize] = useState<SizeType>("large"); // default is 'middle'
+  const [size] = useState<SizeType>("large"); // default is 'middle'
 
   return (
     <>

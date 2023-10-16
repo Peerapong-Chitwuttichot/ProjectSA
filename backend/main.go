@@ -10,15 +10,19 @@ func main() {
 	entity.SetupDatabase()
 	r := gin.Default()
 	r.Use(CORSMiddleware())
-	// Oparator Routes
-	r.GET("/oparators/get", controller.ListOparators)
-	r.GET("/oparator/:id", controller.GetOparator)
+
+	// Operator Routes
+	r.GET("/oparators", controller.ListOparators)
+	r.GET("/oparators/:id", controller.GetOparator)
 	r.POST("/oparators", controller.CreateOparator)
-	r.POST("/oparators/login", controller.OparatorLogin)
 	r.PATCH("/oparators", controller.UpdateOparator)
 	r.DELETE("/oparators/:id", controller.DeleteOparator)
+	// Operator Login
+	r.POST("/oparators/login", controller.OparatorLogin)
+	
+
 	// Run the server
-	r.Run()
+	r.Run(":8080")
 }
 
 func CORSMiddleware() gin.HandlerFunc {
