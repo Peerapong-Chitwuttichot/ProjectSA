@@ -23,11 +23,11 @@ import {
 import "./style.css";
 import { Link, useNavigate, } from "react-router-dom";
 import { UsersInterface } from "../../../interfaces/IUser";
-import { CreateUser } from "../../../services/https";
+import { CreateUser } from "../../../services/https/user";
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
 const { TextArea } = Input;
 
-function RegisterUser() {
+function RegisterUserUI() {
   // const navigate = useNavigate();
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
@@ -48,13 +48,13 @@ function RegisterUser() {
     try {
       const res = await CreateUser(values);
       if (res.status) {
-        messageApi.success("บันทึกข้อมูลสำเร็จ");
+        messageApi.success("ลงทะเบียนสำเร็จ");
 
-        // setTimeout(() => {
-        //   navigate("/login/user");
-        // }, 2000);
+        setTimeout(() => {
+          window.location.href = "/";
+        }, 2000);
       } else {
-        messageApi.error("เกิดข้อผิดพลาดในการบันทึกข้อมูล");
+        messageApi.error(res.message);
       }
     } catch (error) {
       console.error(error);
@@ -231,8 +231,7 @@ function RegisterUser() {
                         name="experience"
                         label="อธิบายประสบการณ์ล่าสุด"
                         rules={[{
-                          required: true,
-                          message: 'กรุณากรอก!'
+                          
                         }]}>
                         <TextArea rows={3} placeholder="เช่น ผมทำงานมาแล้วทั่วโลก" />
                       </Form.Item>
@@ -243,8 +242,7 @@ function RegisterUser() {
                         name="skill"
                         label="อธิบายทักษะของตัวเอง"
                         rules={[{
-                          required: true,
-                          message: 'กรุณากรอก!'
+                          
                         }]}>
                         <TextArea rows={3} placeholder="เช่น ผมเก่งเจ๋ง" />
                       </Form.Item>
@@ -374,5 +372,5 @@ function RegisterUser() {
 };
 
 
-export default RegisterUser;
+export default RegisterUserUI;
 

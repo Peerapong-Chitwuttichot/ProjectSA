@@ -1,100 +1,51 @@
 import React, { useState } from "react";
-import { UserOutlined, DashboardOutlined } from "@ant-design/icons";
-import type { MenuProps } from "antd";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link,
   Navigate,
-  useNavigate,
-  BrowserRouter,
 } from "react-router-dom";
 
 
-import ProfileUser from "./pages/profile/user";
-import RegisterUser from "./pages/register/user";
-import LoginUser from "./pages/login/user";
+import ProfileUserUI from "./pages/profile/user";
+import RegisterUserUI from "./pages/register/user";
+import LoginUserUI from "./pages/login/user";
+import PrivacyUserUI from "./pages/profile/user/privacy";
 
 
 const App: React.FC = () => {
   const token = localStorage.getItem("accessToken");
+  const result = localStorage.getItem("result");
   const page = localStorage.getItem("page");
 
-  const setCurrentPage = (val: string) => {
-    localStorage.setItem("page", val);
-  };
-  // const navigate = useNavigate();
-
-  // const {
-  //   token: { colorBgContainer },
-  // } = theme.useToken();
-
-  // const setCurrentPage = (val: string) => {
-  //   localStorage.setItem("page", val);
-  // };;
-
-  if (!token) {
-    return (
-      <Router>
-        <Routes>
-          <Route path="/profile/user" element={<Navigate to="/" />} />
-          <Route path="/" element={<LoginUser />} />
-          {/* <Route element={<Navigate to="/login/user" />} /> */}
-          <Route path="/register/user" element={<RegisterUser />} />
-        </Routes>
-      </Router>
-    )
-
+  if (token) {
+    console.log(result)
+    if (result === "user") {
+      return (
+        <Router>
+          <Routes>
+            <Route path="/login/user" element={<Navigate to="/profile/user" />} />
+            <Route path="/profile/user" element={<ProfileUserUI />} />
+            <Route path="/privacy/user" element={<PrivacyUserUI />} />
+          </Routes>
+        </Router>
+      );
+    }
   }
 
   return (
-    // <Router>
-    //   <Routes>
-    //     {token ? (
-    //       // ถ้ามี Token
-    //       <>
-    //         <BrowserRouter>
-    //           {/* <Route path="/login/user" element={<Navigate to="/profile/user" />} /> */}
-    //           <Route path="/profile/user" element={<ProfileUser />} />
-    //         </BrowserRouter>
-
-    //       </>
-    //     ) : (
-    //       // ถ้าไม่มี Token
-    //       <>
-    //         <Route path="/profile/user" element={<Navigate to="/" />} />
-    //         <Route path="/" element={<LoginUser />} />
-    //         {/* <Route element={<Navigate to="/login/user" />} /> */}
-    //         <Route path="/register/user" element={<RegisterUser />} />
-    //       </>
-    //     )}
-    //   </Routes>
-    // </Router>
     <Router>
       <Routes>
-        {/* {token ? (
-          <Route path="/login/user" element={<LoginUser />} />
-        ) : (
-          // ไม่มี Token ให้แสดงหน้า LoginUser โดยตรง
-          <LoginUser />
-        )} */}
-        <Route path="/register/user" element={<RegisterUser />} />
-        <Route path="/login/user" element={<LoginUser />} />
-        <Route path="/profile/user" element={<ProfileUser />} />
+        <Route path="/" element={<LoginUserUI />} />
+        <Route path="/register/user" element={<RegisterUserUI />} />
+        <Route path="/profile/user" element={<Navigate to="/" />} />
+        <Route path="/privacy/user" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
+
+
 };
 
-// const RoutesComponent: React.FC = () => {
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/login/user" element={<LoginUser />} />
-//       </Routes>
-//     </Router>
-//   );
-// };
 
 export default App;

@@ -2,47 +2,40 @@ import React, { useEffect, useState } from 'react';
 import {
   Col,
   Card,
-  Space,
   Button,
   Form,
   Input,
   message,
   Divider,
   Row,
-  Layout,
   Select,
   Avatar,
   Drawer,
 } from "antd";
 import {
-  AuditOutlined,
-  UserOutlined,
-  PieChartOutlined,
-  StockOutlined,
-  DownOutlined,
-  DownloadOutlined,
-  HomeOutlined,
-  NotificationOutlined,
-  SolutionOutlined,
   LoginOutlined,
   MenuOutlined,
+  IdcardOutlined,
+  SafetyOutlined,
+  BellOutlined,
 } from "@ant-design/icons";
 import "./style.css";
-import { Link, useNavigate, useParams, } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UsersInterface } from "../../../interfaces/IUser";
-import { CreateUser, GetUsers, UpdateUser } from "../../../services/https";
+import { GetUsers, UpdateUser } from "../../../services/https/user";
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import { Header } from 'antd/es/layout/layout';
-import { UsersIDInterface } from '../../../interfaces/IUserid';
 const { TextArea } = Input;
 
-function ProfileUser() {
-  // const navigate = useNavigate();
+function ProfileUserUI() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
-  const [oldpassword, setOldPassword] = useState();
+
   const [user, setUsers] = useState<UsersInterface>();
-  const [open, setOpen] = useState(false);
+  const [openMenu, setMenuOpen] = useState(false);
+  const [openNoti, setNotiOpen] = useState(false);
+  const [fname, setFname] = useState();
+  const [lname, setLname] = useState();
 
 
   const userID = localStorage.getItem('id'); // รับค่าจาก localStorage
@@ -72,11 +65,20 @@ function ProfileUser() {
     window.location.href = "/";
   }
 
+  const handleProfile = () => {
+    window.location.href = "/profile/user";
+  }
+
+  const handleSecurity = () => {
+    window.location.href = "/privacy/user";
+  }
+
   const getUserById = async () => {
     let res = await GetUsers(Number(userID));
     if (res) {
       setUsers(res);
-      setOldPassword(res.User_pass);
+      setFname(res.First_name);
+      setLname(res.Last_name);
       // set form ข้อมูลเริ่มของผู่้ใช้ที่เราแก้ไข
       form.setFieldsValue({
         title_name: res.Title_name,
@@ -99,42 +101,90 @@ function ProfileUser() {
   }, []);
 
   const showDrawer = () => {
-    setOpen(true);
+    setMenuOpen(true);
   };
 
   const onClose = () => {
-    setOpen(false);
+    setMenuOpen(false);
   };
+
+  // Noti
+  const showNoti = () => {
+    setNotiOpen(true);
+  };
+
+  const onCloseNoti = () => {
+    setNotiOpen(false);
+  };
+  //--
 
   const [size, setSize] = useState<SizeType>('large'); // default is 'middle'
 
   return (
     <>
       <Drawer
-        title="Basic Drawer"
+        title="JOBJOB MENU"
         placement="right"
         closable={false}
         onClose={onClose}
-        open={open}
+        open={openMenu}
         key="right"
       >
-        <div className='profilebg' style={{ marginRight: '50px', transform: 'scale(1.5)' }}>
-          {/* <img src={person1} alt="" style={style.person} /> */}
-          <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" style={{ cursor: 'pointer' }}>
+
+        <Row style={{ marginTop: '10px', marginLeft: '20px'}}>
+          <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" style={{ cursor: 'pointer', transform: 'scale(2)' }}>
 
           </Avatar>
+          <Link to="/login/user">
+            <text style={{
+              fontSize: '20px', marginLeft: '25px',
+              fontWeight: 'bolder', color: 'white'
+            }}>
+              <span style={{ color: '#ff7518' }}>{fname}</span>
+              <span>&nbsp;&nbsp;</span>
+              <span style={{ color: '#ff7518' }}>{lname}</span>
+            </text>
+          </Link>
 
-          {/* <div className='nameText'>Anuwat Passaphan</div> */}
-        </div>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <Button onClick={handleLogout} icon={<LoginOutlined />} style={{
-          fontSize: '18px', fontWeight: 'bold', height: '5vh',
-          marginTop: '0px'
+        </Row>
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-end' }}></div>
+        <Button onClick={handleProfile} icon={<IdcardOutlined />} style={{
+          fontSize: '18px', fontWeight: 'bold', height: '45px',
+          marginTop: '30px',
+          width: '100%',
+          textAlign: 'center'
         }}>
-          Logout
+          Profile
         </Button>
+        <Button onClick={handleSecurity} icon={<SafetyOutlined />} style={{
+          fontSize: '18px', fontWeight: 'bold', height: '45px',
+          marginTop: '5px',
+          width: '100%',
+          textAlign: 'center'
+        }}>
+          Privacy
+        </Button>
+        <Button onClick={handleLogout} icon={<LoginOutlined />} style={{
+          fontSize: '18px', fontWeight: 'bold', height: '45px',
+          marginTop: '5px',
+          width: '100%',
+          textAlign: 'center'
+        }}>
+          <text>Logout</text>
+        </Button>
+      </Drawer>
+      <Drawer
+        title="JOBJOB Notification"
+        placement="right"
+        closable={false}
+        onClose={onCloseNoti}
+        open={openNoti}
+        key="right"
+        width={700}
+      >
+
+        
+        
       </Drawer>
       <Header style={{ padding: 0, background: '#333333' }}>
         <div style={{
@@ -152,22 +202,25 @@ function ProfileUser() {
             <span style={{ color: '#ff7518' }}>JO</span>
             <span>B</span>
           </text>
-          {/* <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span> */}
-          <Button icon={<HomeOutlined />} style={{
-            fontSize: '18px', fontWeight: 'bold', height: '5vh',
-            marginTop: '0px', marginLeft: '30px'
+          <div style={{ flex: 1 }}></div>
+          
+          <Button onClick={showNoti} icon={<BellOutlined />} style={{
+            fontSize: '0px', fontWeight: 'bold',
+            marginTop: '0px', marginLeft: '20px',
+            height: '45px',
+            width: '50px', 
           }}>
-            Home
+            
           </Button>
-
-          <div style={{ flex: 1 }}></div> {/* เพิ่มพื้นที่ที่ว่างเพื่อทำให้ปุ่ม Logout ชิดขวา */}
-
           <Button onClick={showDrawer} icon={<MenuOutlined />} style={{
-            fontSize: '18px', fontWeight: 'bold', height: '5vh',
-            marginTop: '0px', marginLeft: '20px'
+            fontSize: '18px', fontWeight: 'bold',
+            marginTop: '0px', marginLeft: '5px',
+            height: '45px',
+            width: '110px', 
           }}>
             MENU
           </Button>
+          
 
         </div>
       </Header >
@@ -244,88 +297,6 @@ function ProfileUser() {
                       <Input placeholder="เช่น จัง" />
                     </Form.Item>
                   </Col>
-                  <Col xs={24} sm={24} md={24} lg={14} xl={12}>
-                    <Form.Item
-                      className="form-item-wrapper"
-                      label="อีเมล"
-                      name="user_email"
-                      rules={[
-                        {
-                          type: "email",
-                          message: "รูปแบบอีเมลไม่ถูกต้อง !",
-                        },
-                        {
-                          required: true,
-                          message: "กรุณากรอกอีเมล!",
-                        },
-                      ]}
-                    >
-                      <Input />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={14} xl={12}>
-                    <Form.Item
-                      className="form-item-wrapper"
-                      label="รหัสผ่านเดิม"
-                      name="old_pass"
-                      rules={[
-                        {
-                          required: true,
-                          message: "กรุณากรอกรหัสผ่าน!",
-                        },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || oldpassword === value) {
-                              return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('รหัสผ่านไม่ตรงกับรหัสเดิม!'));
-                          },
-                        }),
-                      ]}
-                    >
-                      <Input.Password />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={14} xl={12}>
-                    <Form.Item
-                      className="form-item-wrapper"
-                      label="รหัสผ่านใหม่"
-                      name="user_pass"
-                      rules={[
-                        {
-                          required: true,
-                          message: "กรุณากรอกรหัสผ่าน!",
-                        },
-
-                      ]}
-                    >
-                      <Input.Password />
-                    </Form.Item>
-                  </Col>
-                  <Col xs={24} sm={24} md={24} lg={14} xl={12}>
-                    <Form.Item
-                      name="confirm"
-                      label="ยืนยันรหัสผ่านใหม่"
-                      dependencies={['user_pass']}
-                      hasFeedback
-                      rules={[
-                        {
-                          required: true,
-                          message: 'กรุณายืนยันรหัสผ่าน!',
-                        },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || getFieldValue('user_pass') === value) {
-                              return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('รหัสผ่านไม่ตรงกัน!'));
-                          },
-                        }),
-                      ]}
-                    >
-                      <Input.Password />
-                    </Form.Item>
-                  </Col>
                   <Divider />
                   <Col xs={24} sm={24} md={24} lg={14} xl={12}>
                     <Form.Item
@@ -333,8 +304,8 @@ function ProfileUser() {
                       name="experience"
                       label="อธิบายประสบการณ์ล่าสุด"
                       rules={[{
-                        required: true,
-                        message: 'กรุณากรอก!'
+                        // required: true,
+                        // message: 'กรุณากรอก!'
                       }]}>
                       <TextArea rows={3} placeholder="เช่น ผมทำงานมาแล้วทั่วโลก" />
                     </Form.Item>
@@ -345,8 +316,8 @@ function ProfileUser() {
                       name="skill"
                       label="อธิบายทักษะของตัวเอง"
                       rules={[{
-                        required: true,
-                        message: 'กรุณากรอก!'
+                        // required: true,
+                        // message: 'กรุณากรอก!'
                       }]}>
                       <TextArea rows={3} placeholder="เช่น ผมเก่งเจ๋ง" />
                     </Form.Item>
@@ -360,10 +331,8 @@ function ProfileUser() {
                         message: 'กรุณาเลือกจังหวัด!'
                       }]}>
                       <Select placeholder="เลือกจังหวัด"
-                        // defaultValue="--เลือกจังหวัด--"
-                        style={{ width: 610 }}
+                        style={{ width: 200 }}
                         optionLabelProp="label"
-                        // onChange={handleChange}
                         options={[
                           { value: 'กรุงเทพมหานคร', label: 'กรุงเทพมหานคร' },
                           { value: 'กาญจนบุรี', label: 'กาญจนบุรี' },
@@ -468,5 +437,5 @@ function ProfileUser() {
 };
 
 
-export default ProfileUser;
+export default ProfileUserUI;
 

@@ -15,6 +15,13 @@ func CreateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+
+	var existingUser entity.User_account
+	if err := entity.DB().Where("user_email = ?", user.User_email).First(&existingUser).Error; err == nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "อีเมลนี้มีผู้ใช้แล้ว"})
+		return
+	}
+
 	if err := entity.DB().Create(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
@@ -43,10 +50,10 @@ func ListUsers(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"data": users})
 }
 
-// DELETE /users/:id
+// DELETE /user/:id
 func DeleteUser(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM user_account WHERE id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM user_accounts WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
 		return
 	}
@@ -68,7 +75,42 @@ func UpdateUser(c *gin.Context) {
 		return
 	}
 
-	if err := entity.DB().Save(&user).Error; err != nil {
+	if err := entity.DB().Model(&result).Select("skill", "experience", "title_name",
+		"first_name", "last_name", "address").Updates(&user).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"data": user})
+}
+
+// PATCH /users/privacy
+func UpdatePrivacyUser(c *gin.Context) {
+	var user entity.User_account
+	var result entity.User_account
+
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	if err := entity.DB().Raw("SELECT * FROM user_accounts WHERE id = ?", user.ID).Scan(&result).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+	// ตรวจสอบว่าอีเมลที่ต้องการอัปเดตไม่ซ้ำกับผู้ใช้อื่น ๆ ยกเว้นถ้าอีเมลนั้นเป็นของผู้ใช้ตัวเอง
+	if user.User_email != result.User_email {
+		var existingUser entity.User_account
+		if err := entity.DB().Where("user_email = ?", user.User_email).First(&existingUser).Error; err == nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "อีเมลนี้มีผู้ใช้แล้ว"})
+			return
+		}
+	}
+	// ค้นหา user ด้วย id
+	if tx := entity.DB().Where("id = ?", user.ID).First(&result); tx.RowsAffected == 0 {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
+		return
+	}
+
+	if err := entity.DB().Model(&result).Updates(&user).Error; err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
@@ -82,17 +124,11 @@ func UserLogin(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// if err := entity.DB().Raw("SELECT * FROM user_accounts WHERE user_email = ? AND user_pass = ?", user.User_email, user.User_pass).Scan(&user).Error; err != nil {
-	// 	c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-	// 	return
-	// }
-	// c.JSON(http.StatusOK, gin.H{"data": user})
 	if err := entity.DB().Where("user_email = ? AND user_pass = ?", user.User_email, user.User_pass).First(&user).Error; err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "อีเมลหรือรหัสผ่านไม่ถูกต้อง"})
 		// c.JSON(http.StatusBadRequest, gin.H{"error": "user not found"})
 		return
 	}
-	// สร้าง accessToken ที่คุณต้องการส่ง
 	accessToken, err := generateAccessToken(user)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "ไม่สามารถสร้าง accessToken"})
@@ -100,18 +136,7 @@ func UserLogin(c *gin.Context) {
 	}
 
 	// ส่งคำตอบพร้อม accessToken
-	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "เข้าสู่ระบบสำเร็จ", "accessToken": accessToken, "id": user.ID})
-
-	// ตรวจสอบคู่อีเมลและรหัสผ่านในฐานข้อมูล
-	// นี่คือตัวอย่างเบื้องต้น คุณต้องเขียนโค้ดเพิ่มเติมในส่วนนี้
-	// เพื่อตรวจสอบข้อมูลจริงในฐานข้อมูลของคุณ
-	// if user.User_email == "user@example.com" && user.User_pass == "password123" {
-	// 	// หากคู่อีเมลและรหัสผ่านถูกต้อง
-	// 	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "เข้าสู่ระบบสำเร็จ", "id": user.ID})
-	// } else {
-	// 	// หากไม่ตรงกับข้อมูลในฐานข้อมูล
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"status": "error", "message": "อีเมลหรือรหัสผ่านไม่ถูกต้อง"})
-	// }
+	c.JSON(http.StatusOK, gin.H{"status": "success", "message": "เข้าสู่ระบบสำเร็จ", "accessToken": accessToken, "id": user.ID, "result": "user"})
 }
 
 func generateAccessToken(user entity.User_account) (string, error) {
