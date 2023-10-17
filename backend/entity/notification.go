@@ -4,17 +4,19 @@ import (
     "gorm.io/gorm"
 )
 
-
-type WorkHasUser struct {
+type Notification struct {
     gorm.Model
-    Status bool
 
-    Resumes []Resume `gorm:"foreignKey:WorkHasUserID"`
+    Content string
+    Read    bool
+
 
 	JobpostID *uint
 	Jobpost Jobpost `gorm:"foreignKey:JobpostID"`
 
 	UserID *uint
 	User User `gorm:"foreignKey:UserID"`
-	
+
+
+
 }

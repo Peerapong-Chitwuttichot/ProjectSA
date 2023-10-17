@@ -1,7 +1,6 @@
 package entity
 
 import (
-	"fmt"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
@@ -9,21 +8,24 @@ import (
 var db *gorm.DB
 
 func DB() *gorm.DB {
-	return db 
+	return db
 }
 
 func SetupDatabase() {
-	database, err := gorm.Open(sqlite.Open("sa-66.db"), &gorm.Config{})
+	database, err := gorm.Open(sqlite.Open("JOBJOB.db"), &gorm.Config{})
 	if err != nil {
-		panic("Failed to connect database")
-	} else {
-		fmt.Println("Connect successfully")
+		panic("Failed to conect database")
 	}
 
 	database.AutoMigrate(
-		&WorkHasUser{},
+		&CandidateSelection{},
+		&Jobpost{},
+		&Notification{},
+		&Operator{},
 		&Resume{},
+		&WorkHasUser{},
+		&User{},
 	)
-	
+
 	db = database
 }
