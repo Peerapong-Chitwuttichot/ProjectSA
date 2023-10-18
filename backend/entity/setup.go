@@ -12,11 +12,11 @@ func DB() *gorm.DB {
 }
 
 func SetupDatabase() {
-	database, err := gorm.Open(sqlite.Open("oparator-jobjob.db"), &gorm.Config{})
+	database, err := gorm.Open(sqlite.Open("operatorjobjob.db"), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
 	// Migrate the schema
-	database.AutoMigrate(&Oparator_account{})
+	database.AutoMigrate(&Operator_account{})
 	db = database
 }

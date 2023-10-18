@@ -1,28 +1,25 @@
 package main
 
 import (
-	"github.com/Peerapong-Chitwuttichot/oparator-jobjob/controller"
-	"github.com/Peerapong-Chitwuttichot/oparator-jobjob/entity"
+	"github.com/Peerapong-Chitwuttichot/operator-jobjob/controller"
+	"github.com/Peerapong-Chitwuttichot/operator-jobjob/entity"
 	"github.com/gin-gonic/gin"
 )
-
 func main() {
 	entity.SetupDatabase()
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 
 	// Operator Routes
-	r.GET("/oparators", controller.ListOparators)
-	r.GET("/oparators/:id", controller.GetOparator)
-	r.POST("/oparators", controller.CreateOparator)
-	r.PATCH("/oparators", controller.UpdateOparator)
-	r.DELETE("/oparators/:id", controller.DeleteOparator)
-	// Operator Login
-	r.POST("/oparators/login", controller.OparatorLogin)
-	
-
+	r.GET("/operators/get", controller.ListOperators)
+	r.GET("/operator/:id", controller.GetOperator)
+	r.POST("/operators", controller.CreateOperator)
+	r.POST("/operators/login", controller.OperatorLogin)
+	r.PATCH("/operators", controller.UpdateOperator)
+	r.PATCH("/operators/privacy", controller.UpdatePrivacyOperator)
+	r.DELETE("/operator/:id", controller.DeleteOperator)
 	// Run the server
-	r.Run(":8080")
+	r.Run()
 }
 
 func CORSMiddleware() gin.HandlerFunc {
@@ -30,7 +27,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH")
+		c.Writer.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS, GET, PUT, PATCH, DELETE")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)

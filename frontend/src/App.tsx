@@ -1,99 +1,51 @@
-import React, {  } from "react";
-
-
+import React, { useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-
+  Navigate,
 } from "react-router-dom";
 
 
-import ProfileOparator from "./pages/profile/oparator";
-import PrivacyOparator from "./pages/privacy/oparator";
-import RegisterOparator from './pages/register/oparator';
-import LoginOparator from "./pages/login/oparator";
+import ProfileOperator from "./pages/profile/operator";
+import RegisterOperator from './pages/register/operator';
+import LoginOperator from "./pages/login/operator";
+import PrivacyOperator from "./pages/privacy/operator";
 
 
 const App: React.FC = () => {
   const token = localStorage.getItem("accessToken");
+  const result = localStorage.getItem("result");
   const page = localStorage.getItem("page");
 
-  const setCurrentPage = (val: string) => {
-    localStorage.setItem("page", val);
-  };
-  // const navigate = useNavigate();
-
-  // const {
-  //   token: { colorBgContainer },
-  // } = theme.useToken();
-
-  // const setCurrentPage = (val: string) => {
-  //   localStorage.setItem("page", val);
-  // };;
-
-  if (!token) {
-    return (
-      <Router>
-        <Routes>
-          {/* <Route path="/profile/oparator" element={<Navigate to="/" />} /> */}
-          <Route path="/login/oparator" element={<LoginOparator />} />
-          {/* <Route element={<Navigate to="/login/oparator" />} /> */}
-          <Route path="/register/oparator" element={<RegisterOparator />} />
-        </Routes>
-      </Router>
-    )
-
+  if (token) {
+    console.log(result)
+    if (result === "operator") {
+      return (
+        <Router>
+          <Routes>
+            <Route path="/login/operator" element={<Navigate to="/profile/operator" />} />
+            <Route path="/profile/operator" element={<ProfileOperator />} />
+            <Route path="/privacy/operator" element={<PrivacyOperator />} />
+          </Routes>
+        </Router>
+      );
+    }
   }
 
   return (
-    // <Router>
-    //   <Routes>
-    //     {token ? (
-    //       // ถ้ามี Token
-    //       <>
-    //         <BrowserRouter>
-    //           {/* <Route path="/login/oparator" element={<Navigate to="/profile/oparator" />} /> */}
-    //           <Route path="/profile/oparator" element={<ProfileOparator />} />
-    //         </BrowserRouter>
-
-    //       </>
-    //     ) : (
-    //       // ถ้าไม่มี Token
-    //       <>
-    //         <Route path="/profile/oparator" element={<Navigate to="/" />} />
-    //         <Route path="/" element={<LoginOparator />} />
-    //         {/* <Route element={<Navigate to="/login/oparator" />} /> */}
-    //         <Route path="/register/oparator" element={<RegisterOparator />} />
-    //       </>
-    //     )}
-    //   </Routes>
-    // </Router>
     <Router>
       <Routes>
-        {/* {token ? (
-          <Route path="/login/oparator" element={<LoginOparator />} />
-        ) : (
-          // ไม่มี Token ให้แสดงหน้า LoginOparator โดยตรง
-          <LoginOparator />
-        )} */}
-        <Route path="/register/oparator" element={<RegisterOparator />} />
-        <Route path="/login/oparator" element={<LoginOparator />} />
-        <Route path="/profile/oparator" element={<ProfileOparator />} />
-        <Route path="/privacy/oparator" element={<PrivacyOparator />} />
+        <Route path="/" element={<LoginOperator />} />
+        <Route path="/register/operator" element={<RegisterOperator />} />
+        <Route path="/profile/operator" element={<Navigate to="/" />} />
+        <Route path="/privacy/operator" element={<Navigate to="/" />} />
       </Routes>
     </Router>
   );
+
+
 };
 
-// const RoutesComponent: React.FC = () => {
-//   return (
-//     <Router>
-//       <Routes>
-//         <Route path="/login/oparator" element={<LoginOparator />} />
-//       </Routes>
-//     </Router>
-//   );
-// };
 
 export default App;

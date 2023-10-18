@@ -1,4 +1,4 @@
-module github.com/Peerapong-Chitwuttichot/oparator-jobjob
+module github.com/Peerapong-Chitwuttichot/operator-jobjob
 
 go 1.19
 
