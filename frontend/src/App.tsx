@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import type { MenuProps } from "antd";
+
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,26 +9,14 @@ import {
 import { Layout} from "antd";
 
 import CandidateSelection from "./pages/operator/candidateSelection";
+import TestNotification from "./pages/customer/TestNotification";
 
 
-type MenuItem = Required<MenuProps>["items"][number];
-
-function getItem(
-  label: React.ReactNode,
-  key: React.Key,
-  icon?: React.ReactNode,
-  children?: MenuItem[]
-): MenuItem {
-  return {
-    key,
-    icon,
-    children,
-    label,
-  } as MenuItem;
-}
 
 
 const App: React.FC = () => {
+
+
 
   return (
     
@@ -39,7 +26,8 @@ const App: React.FC = () => {
         <Routes>
                 
                 <Route path="/operator/CandidateSelection" element={<CandidateSelection />} />
-                {/* <Route path="/customer/feed" element={<Feed />} /> */}
+                <Route path="/customer/TestNotification" element={<TestNotification />} /> 
+                 
               </Routes>
 
       </Layout>

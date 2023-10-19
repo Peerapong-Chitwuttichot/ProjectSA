@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
   LoginOutlined,
@@ -8,367 +8,278 @@ import {
   HomeOutlined,
   UserAddOutlined,
   UserDeleteOutlined,
-  UploadOutlined,
+  MenuOutlined,
+
 } from '@ant-design/icons';
 
-import type { InputRef } from 'antd';
-import { Col, Input, Popconfirm, Row, Upload } from 'antd';
-import type { FormInstance } from 'antd/es/form';
-
-
-import { Layout, Button, theme, Card, Divider} from 'antd';
-
-
-import type { RadioChangeEvent } from 'antd';
-import { Form, Radio, Space, Switch, Table } from 'antd';
-import type { ColumnsType, TableProps } from 'antd/es/table';
-import type { ExpandableConfig, TableRowSelection } from 'antd/es/table/interface';
+import { Layout, Button, Card, Divider, Drawer, Row } from 'antd';
+import { Form, Space, Table } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
 import Modal from 'antd/es/modal/Modal';
-
-interface EditableRowProps {
-  index: number;
-}
-
-const EditableContext = React.createContext<FormInstance<any> | null>(null);
-const EditableRow: React.FC<EditableRowProps> = ({ index, ...props }) => {
-  const [form] = Form.useForm();
-  return (
-    <Form form={form} component={false}>
-      <EditableContext.Provider value={form}>
-        <tr {...props} />
-      </EditableContext.Provider>
-    </Form>
-  );
-};
-
-interface EditableCellProps {
-  title: React.ReactNode;
-  editable: boolean;
-  children: React.ReactNode;
-  dataIndex: keyof Item;
-  record: Item;
-  handleSave: (record: Item) => void;
-}
+import { DataWHU } from "../../../interfaces/index";
+import TextArea from 'antd/es/input/TextArea';
+import Avatar from 'antd/es/avatar/avatar';
+import { Link } from 'react-router-dom';
+import { CreateCandidate, GetCandidate} from '../../../services/https';
 
 
-const EditableCell: React.FC<EditableCellProps> = ({
-  title,
-  editable,
-  children,
-  dataIndex,
-  record,
-  handleSave,
-  ...restProps
-}) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef<InputRef>(null);
-  const form = useContext(EditableContext)!;
 
-  useEffect(() => {
-    if (editing) {
-      inputRef.current!.focus();
-    }
-  }, [editing]);
-
-  const toggleEdit = () => {
-    setEditing(!editing);
-    form.setFieldsValue({ [dataIndex]: record[dataIndex] });
-  };
-
-  const save = async () => {
-    try {
-      const values = await form.validateFields();
-
-      toggleEdit();
-      handleSave({ ...record, ...values });
-    } catch (errInfo) {
-      console.log('Save failed:', errInfo);
-    }
-  };
-
-  let childNode = children;
-
-  if (editable) {
-    childNode = editing ? (
-      <Form.Item
-        style={{ margin: 0 }}
-        name={dataIndex}
-        rules={[
-          {
-            required: true,
-            message: `${title} is required.`,
-          },
-        ]}
-      >
-        <Input ref={inputRef} onPressEnter={save} onBlur={save} />
-      </Form.Item>
-    ) : (
-      <div className="editable-cell-value-wrap" style={{ paddingRight: 24 }} onClick={toggleEdit}>
-        {children}
-      </div>
-    );
-  }
-
-  return <td {...restProps}>{childNode}</td>;
-};
 
 type EditableTableProps = Parameters<typeof Table>[0];
 type ColumnTOCF = Exclude<EditableTableProps['columns'], undefined>;
 
-interface Item {
-  key: number;
-  name: string;
-  JobPost: string;
-  detail: string;
-  description: string;
-}
-
-interface DataType {
-  key: number;
-  name: string;
-  JobPost: string;
-  detail: string;
-  description: string;
-}
-
-
-const data: DataType[] = [];
-for (let i = 1; i <= 20; i++) {
-  data.push({
-    key: i,
-    name: 'John Brown',
-    JobPost: String(`${i}2`),
-    detail: `New York No. ${i} Lake Park`,
-    description: `My name is John Brown, I am ${i}2 years old, living in New York No. ${i} Lake Park.`,
-  });
-}
-
-// Data for push to table Confirm Candidate
-
-
-const defaultExpandable = { expandedRowRender: (record: DataType) => <p>{record.description}</p> };
 
 
 const CandidateSelection: React.FC = () => {
-  const columnsCandidate: ColumnsType<DataType> = [
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    align: 'center',
-    width: '15%' ,
-  },
-  {
-    title: 'Job Post',
-    dataIndex: 'JobPost',
-    align: 'center',
-    width: '20%' ,
-    
-  },
-  {
-    
-    title: 'Detail',
-    dataIndex: 'detail',
-    align: 'center',
-    width: '40%' ,
-  },
 
-  {
-    
-    title: 'Selection' ,
-    align: 'center',
-    width: '15%' ,
-    render: () => (
-      <Space >
- 
-        <Button >
 
-          Delete
-          <UserDeleteOutlined />
+  let [dataCS, setDataCS] = useState<DataWHU[]>([]);
 
-        </Button>
+  useEffect(() => {
+    GetDataCS();
+  }, []);
+  
+  const GetDataCS = async () => {
+    let res = await GetCandidate();
+    if (res) {
+      // รับข้อมูลจาก GetCandidate และตั้งค่าให้ data เพื่อให้ columnsCandidate ใช้ข้อมูลจาก dataCS
+      setDataCS(res);
+    }
+  };
+  
 
-        <Button onClick={handleAdd}>
-          <Space>
+  
+  const { Header, Content } = Layout;
 
-            Add
-            <UserAddOutlined />
 
+
+  const columnsCandidate: ColumnsType<DataWHU> = [
+
+    {
+      title: 'Name',
+      dataIndex: 'UserName',
+      align: 'center',
+      width: '15%',
+    },
+    {
+      title: 'Job Post',
+      dataIndex: 'Position', 
+      align: 'center',
+      width: '20%',
+    },
+    {
+      title: 'Detail',
+      dataIndex: 'Detail',
+      align: 'center',
+      width: '40%',
+    },
+    {
+
+      title: 'Selection',
+      align: 'center',
+      width: '15%',
+      key: 'key',
+      render: (record) => (
+        
+          <Space >
+
+            <Button onClick={() => AddDataToTableCF(record.UserID)}>
+              <Space>
+
+                เพิ่มรายชื่อ
+                <UserAddOutlined />
+
+              </Space>
+            </Button>
           </Space>
-        </Button>
+        
+      ),
+    },
+  ];
 
-      </Space>
-    ),
-  },
-];
+
+
+
+  // กด Add เพื่อย้ายข้อมูลไปอีกตาราง หลังจากย้ายให้ลบข้อมูลตารางเดิม
+  const AddDataToTableCF = (id: React.Key) => {
+    // หาข้อมูลที่ต้องการลบ
+    const itemToCF = dataCS.find((item) => item.UserID === id);
+    if (itemToCF) {
+      // ลบข้อมูลจาก data
+      const newData = dataCS.filter((item) => item.UserID !== id);
+      // เปลี่ยนข้อมูลใน dataCS โดยใช้ setDataCS
+      setDataCS(newData);
+      // เพิ่มข้อมูลที่ถูกลบเข้าตารางที่ 2
+      handleAddToConfirm(itemToCF);
+    }
+  };
   
-  const {
-    token: { colorBgContainer },
-  } = theme.useToken();
   
-  const [expandable, setExpandable] = useState<ExpandableConfig<DataType> | undefined>(
-    defaultExpandable,
-  );
-  
-  const [rowSelection, setRowSelection] = useState<TableRowSelection<DataType> | undefined>({});
-  const [hasData, setHasData] = useState(true);
-  const [tableLayout, setTableLayout] = useState();
-  const [ellipsis, setEllipsis] = useState(false);
-  const [yScroll, setYScroll] = useState(false);
-  const [xScroll, setXScroll] = useState<string>();
-
-
-  const handleTableLayoutChange = (e: RadioChangeEvent) => {
-    setTableLayout(e.target.value);
-  };
-  const handleExpandChange = (enable: boolean) => {
-    setExpandable(enable ? defaultExpandable : undefined);
-  };
-  const handleEllipsisChange = (enable: boolean) => {
-    setEllipsis(enable);
-  };
-  const handleRowSelectionChange = (enable: boolean) => {
-    setRowSelection(enable ? {} : undefined);
-  };
-  const handleYScrollChange = (enable: boolean) => {
-    setYScroll(enable);
-  };
-  const handleXScrollChange = (e: RadioChangeEvent) => {
-    setXScroll(e.target.value);
-  };
-  const handleDataChange = (newHasData: boolean) => {
-    setHasData(newHasData);
+  const handleAddToConfirm = (record: DataWHU) => {
+    const newData: DataWHU = {
+      ID: count,
+      UserName: record.UserName,
+      Position: record.Position,
+      Detail: record.Detail ,
+      JobpostID: record.JobpostID,
+      Status_cs: '',
+      Read: false,
+    };
+    setDataSource([...dataSource, newData]);
+    setCount(count + 1);
   };
 
 
+  const [dataSource, setDataSource] = useState<DataWHU[]>([]);
+  const [count, setCount] = useState(1);
 
 
 
-  const tableProps: TableProps<DataType> = {
-  
-    expandable,
-    tableLayout,
+
+  // กด Delete เพื่อย้ายข้อมูลไปตารางแรก หลังจากย้ายให้ลบข้อมูลตารางเดิม
+  const MoveDataBackToOriginalTable = (id: React.Key) => {
+    // หาข้อมูลที่ต้องการย้ายกลับ
+    const itemToMoveBack = dataSource.find((item) => item.ID === id);
+    if (itemToMoveBack) {
+      // ลบข้อมูลจาก dataSource หรือตารางที่ 2
+      const newDataSource = dataSource.filter((item) => item.ID !== id);
+      setDataSource(newDataSource);
+
+      // เพิ่มข้อมูลที่ถูกลบเข้าตารางเดิม
+      handleAddToOriginalTable(itemToMoveBack);
+    }
   };
 
-const { Header, Sider, Content} = Layout;
-
-
-
-const [dataSource, setDataSource] = useState<DataType[]>([
-  {
-    key: 0, 
-    name: 'Edward King 0',
-    JobPost: `2`,
-    detail: `New York No. 0 Lake Park`,
-    description: `My name is Edward King, I am 32 years old, living in New York No. 0 Lake Park.`,
-  },
-  // ...
-]);
- 
-const [count, setCount] = useState(2);
-
-
-const handleDelete = (key: React.Key) => {
-  const newData = dataSource.filter((item) => item.key !== key);
-  setDataSource(newData);
-};
-
-
-
-const defaultColumns: (ColumnTOCF[number] & { editable?: boolean; dataIndex: string })[] = [
-  {
-    title: 'NO',
-    dataIndex: 'key',
-    align: 'center',
-    
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    width: '40%',
-    align: 'center',
-  },
-  {
-    title: 'Job Post',
-    dataIndex: 'JobPost',
-    align: 'center',
-  },
-  {
-    title: 'Selection',
-    align: 'center',
-    width: '20%',
-    dataIndex: 'key', // เพิ่ม dataIndex เพื่อระบุว่าจะใช้ key ในคอลัมน์นี้
-    render: (key: React.Key) => (
-      dataSource.length >= 1 ? (
-        <Button  onClick ={() => handleDelete(key)}>
-          <Space>
-            Delete
-            <UserDeleteOutlined />
-          </Space>
-        </Button>
-      ) : null
-    ),
-  },
-];
-
-
-const handleAdd = () => {
-  const newData: DataType = {
-    key: count,
-    name: `Edward King ${count}`,
-    JobPost: '32',
-    detail: `London, Park Lane no. ${count}`,
-    description: '',
+  const handleAddToOriginalTable = (record: DataWHU) => {
+    const newData: DataWHU = {
+      ID: record.ID,
+      UserName: record.UserName,
+      Position: record.Position,
+      Detail: record.Detail,
+      JobpostID: record.JobpostID,
+      Status_cs: '',
+      Read: false,
+    };
+    setDataCS([...dataCS, newData]);
+    //setCount(count + 1);
   };
-  setDataSource([...dataSource, newData]);
-  setCount(count + 1);
-};
 
 
-const handleSave = (row: DataType) => {
-  const newData = [...dataSource];
-  const index = newData.findIndex((item) => row.key === item.key);
-  const item = newData[index];
-  newData.splice(index, 1, {
-    ...item,
-    ...row,
+
+
+  const defaultColumns: (ColumnTOCF[number] & { editable?: boolean; dataIndex: string })[] = [
+    {
+      title: 'NO',
+      dataIndex: 'id',
+      align: 'center',
+      width: '10%',
+    },
+    {
+      title: 'Name',
+      dataIndex: 'UserName',
+      align: 'center',
+      width: '20%',
+    },
+    {
+      title: 'Job Post',
+      dataIndex: 'Position', 
+      align: 'center',
+      width: '20%',
+    },
+    {
+      title: 'Selection',
+      align: 'center',
+      width: '20%',
+      dataIndex: 'ID',
+      render: (key: React.Key) => (
+        dataSource.length > 0 ? (
+          <Button onClick={() => MoveDataBackToOriginalTable(key)}>
+            <Space>
+              นำรายชื่อออก
+              <UserDeleteOutlined />
+            </Space>
+          </Button>
+        ) : null
+      ),
+    },
+  ];
+
+
+
+
+
+
+
+
+  const columns = defaultColumns.map((col) => {
+    if (!col.editable) {
+      return col;
+    }
+    return {
+      ...col,
+      onCell: (record: DataWHU) => ({
+        record,
+        editable: col.editable,
+        dataIndex: col.dataIndex,
+        title: col.title,
+
+      }),
+    };
   });
-  setDataSource(newData);
-};
-
-const components = {
-  body: {
-    row: EditableRow,
-    cell: EditableCell,
-  },
-};
-
-const columns = defaultColumns.map((col) => {
-  if (!col.editable) {
-    return col;
-  }
-  return {
-    ...col,
-    onCell: (record: DataType) => ({
-      record,
-      editable: col.editable,
-      dataIndex: col.dataIndex,
-      title: col.title,
-      handleSave,
-    }),
-  };
-});
 
 
-
-
-const [isConfirmed, setIsConfirmed] = useState(false);
+  const [isConfirmed, setIsConfirmed] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [jobInterviewDetail, setJobInterviewDetail] = useState("");
+  const [isPass, setIsPass] = useState(false);
+  const [isReject, setIsReject] = useState(false);
+  
+  
 
-  const handleConfirmClick = () => {
-    setIsConfirmed(true);
-    showModal();
+  async function handleConfirmClick() {
+    if (jobInterviewDetail && (isPass || isReject)) {
+      if (dataSource.length >= 1) {
+        const confirmedDataArray = dataSource.map((record) => ({
+          ID: record.ID, 
+          Pass_or_rejection_details: jobInterviewDetail,
+          Status_cs: isPass ? "Pass" : "Reject",
+          JobpostID: record.JobpostID,
+          Candidate: record.UserName,
+          Read: record.Read,
+          User_id: record.ID,
+          
+        }));
+  
+        try {
+          // สร้าง CandidateSelection โดยเรียก API ที่เหมาะสม
+          console.log(confirmedDataArray);
+          await CreateCandidate(confirmedDataArray);
+  
+          // รีเซ็ตสถานะ Confirm
+          setIsConfirmed(true);
+          showModal();
+          // ลบรายการที่ถูกยืนยันออกจาก dataSource
+          setDataSource([]);
+          setCount(1);
+        } catch (error) {
+          console.error("Error creating CandidateSelection and Notification: ", error);
+        }
+      } else {
+        console.error("No data in dataSource");
+      }
+    } else {
+      console.error("Please fill in all required information");
+    }
+  }
+  
+  
+  
+  
+  
 
-  };
+
+
+
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -377,110 +288,216 @@ const [isConfirmed, setIsConfirmed] = useState(false);
   const handleOk = () => {
     setIsModalVisible(false);
     setIsConfirmed(false);
+    setJobInterviewDetail("");
+    setIsPass(false);
+    setIsReject(false);
   };
 
   const handleCancel = () => {
     setIsModalVisible(false);
     setIsConfirmed(false);
+    setJobInterviewDetail("");
+    setIsPass(false);
+    setIsReject(false);
   };
 
 
 
-  
+
+
+  // ส่วนของ Header and sider
+  const [open, setOpen] = useState(false);
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("id");
+    window.location.href = "/";
+  }
 
 
 
-return (
-  
-<Layout>
-<Space direction="vertical" style={{ width: '100%' }} size={[0, 48]}>
-        <Header style={{ padding: 0, background: '#333333'}}>
-          
-          <div style={{alignItems: 'center' ,display: 'grid', 
-            gridTemplateColumns: 'repeat(6, 1fr)', gridGap: '20px',
-            justifySelf: 'center', maxWidth: '99%'}}>
 
-              
-            <text style={{fontSize: '50px', marginLeft: '30px',
-              fontWeight: 'bolder', color: 'white', justifySelf: 'center',
-              height: '-25px'}}> 
-              <span style={{color: '#ff7518'}}>JO</span>
-              <span>B</span>
-              <span style={{color: '#ff7518'}}>JO</span>
-              <span>B</span>
-
-            </text>
-
-            <Button icon={<HomeOutlined />} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
-                            marginTop: '5px'}}> 
-              Home 
-            </Button>
-
-            <Button icon={<NotificationOutlined />} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
-                            marginTop: '5px'}}> 
-              Job Post 
-            </Button>
-
-            <Button icon={<SolutionOutlined />} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
-                            marginTop: '5px'}}> 
-              Candidate 
-            </Button>
-
-            <Button icon={<UserOutlined />} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
-                            marginTop: '5px'}}> 
-              My Profile 
- 
-            </Button>
-
-            <Button icon={<LoginOutlined />} style={{fontSize: '18px',fontWeight: 'bold', height: '5vh',
-                            marginTop: '5px'}}> 
-              Logout 
-            </Button>
-
-          </div>
-          
-        </Header>
-        
-      </Space>
-
-<Layout>
+  return (
     
-<Content>
-  <Card style={{padding: 24, minHeight: 280, background: '#d9d9d9'}} >
 
-    <>
-      <Form
-        layout="inline"
-        className="components-table-demo-control-bar"
-        style={{ marginBottom: 16 }}
+    <Layout>
+
+{/* <button onClick={Get}>
+  fetchData
+</button> */}
+
+      <Drawer
+        title="JOBJOB MENU"
+        placement="right"
+        closable={false}
+        onClose={onClose}
+        open={open}
+        key="right"
       >
+        <div >
 
-        <Divider>Candidate Selection JOBJOB</Divider>
+          <Row>
+            <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" style={{ cursor: 'pointer', transform: 'scale(1.5)' }}>
 
-      </Form>
-      
-      <Table
-        {...tableProps}
+            </Avatar>
 
-        bordered
-        scroll={{ x: '100%', y: 240 }}
+            <Link to={'/customer/Receiver'}>
+              <text style={{
+                fontSize: '20px', marginLeft: '25px',
+                fontWeight: 'bolder', color: 'white'
+              }}>
+                <span style={{ color: '#ff7518' }}>Naruebeth</span>
+                <span>B</span>
+                <span style={{ color: '#ff7518' }}>Chitchuai</span>
+              </text>
 
-        size="middle"
-        
-        columns={columnsCandidate}
-        dataSource={data}
-        
-        footer={() => (
-          <div style={{ textAlign: 'center' }}>Suranaree University of Technology</div>
-        )}
-      />
-      
-    </>
-  </Card>
+            </Link>
 
-</Content>
+          </Row>
 
-</Layout>
+        </div>
+
+        <p>
+          <Button icon={<HomeOutlined style={{ marginLeft: '-35px' }} />} style={{
+            fontSize: '18px', fontWeight: 'bold', height: '5vh',
+            marginTop: '5px', width: '100%'
+          }}>
+            Home
+          </Button>
+        </p>
+
+        <p>
+          <Button icon={<UserOutlined style={{ marginLeft: '-0px' }} />} style={{
+            fontSize: '18px', fontWeight: 'bold', height: '5vh',
+            marginTop: '5px', width: '100%'
+          }}>
+            My Profile
+          </Button>
+        </p>
+
+        <p>
+          <Button icon={<NotificationOutlined style={{ marginLeft: '-15px' }} />} style={{
+            fontSize: '18px', fontWeight: 'bold', height: '5vh',
+            marginTop: '5px', width: '100%', justifySelf: 'auto'
+          }}>
+            Job Post
+          </Button>
+        </p>
+
+        <p>
+          <Button icon={<SolutionOutlined />} style={{
+            fontSize: '18px', fontWeight: 'bold', height: '5vh',
+            marginTop: '5px', width: '100%'
+          }}>
+            Candidate
+          </Button>
+        </p>
+
+        <p>
+          <Button onClick={handleLogout} icon={<LoginOutlined style={{ marginLeft: '-25px' }} />}
+            style={{
+              fontSize: '18px', fontWeight: 'bold', height: '5vh',
+              marginTop: '5px', width: '100%'
+            }}>
+
+            Logout
+          </Button>
+        </p>
+
+
+    
+
+
+      </Drawer>
+
+      <Header style={{ padding: 0, background: '#333333' }}>
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between', // ชิดด้านขวา
+          maxWidth: '99%'
+        }}>
+          <text style={{
+            fontSize: '50px', marginLeft: '30px',
+            fontWeight: 'bolder', color: 'white'
+          }}>
+            <span style={{ color: '#ff7518' }}>JO</span>
+            <span>B</span>
+            <span style={{ color: '#ff7518' }}>JO</span>
+            <span>B</span>
+          </text>
+
+
+          <div style={{ flex: 1 }}></div> {/* เพิ่มพื้นที่ที่ว่างเพื่อทำให้ปุ่ม Logout ชิดขวา */}
+
+          <Button onClick={showDrawer} icon={<MenuOutlined />} style={{
+            fontSize: '18px', fontWeight: 'bold', height: '5vh',
+            marginTop: '0px', marginLeft: '20px'
+          }}>
+            MENU
+          </Button>
+
+        </div>
+      </Header >
+
+
+
+
+
+
+      <Layout>
+
+        <Content>
+          <Card style={{ padding: 24, minHeight: 280, background: '#d9d9d9' }} >
+
+
+            <>
+              <Form
+                layout="inline"
+                className="components-table-demo-control-bar"
+                style={{ marginBottom: 16 }}
+              >
+
+                <Divider>Candidate Selection JOBJOB</Divider>
+
+              </Form>
+
+              <Table
+                
+
+                bordered
+                scroll={{ x: '100%', y: 240 }}
+
+                size="middle"
+
+                rowKey="id"
+
+                columns={columnsCandidate}
+                dataSource={dataCS}
+
+                // columns={columnsCandidate}
+                // dataSource={dataCS}
+
+                footer={() => (
+                  <div style={{ textAlign: 'center' }}>Suranaree University of Technology</div>
+                )}
+              /> 
+
+                
+
+            </>
+          </Card>
+
+        </Content>
+
+      </Layout>
 
       <Layout>
         <div style={{ display: 'grid', gridTemplateColumns: '80% 20%' }}>
@@ -495,56 +512,70 @@ return (
             />
           </Card>
 
-          <Card style={{display: 'flex', flexDirection: 'column', background: '#6e6e6e'}}>
-            
-            
-              <Space direction="vertical" style={{ width: '100%'}} size="large">
-                
-                <Button onClick={handleConfirmClick}> 
-                  {isConfirmed ? 'Confirmed' : 'Confirm and Sent'}
-                </Button>
+          <Card style={{ display: 'flex', flexDirection: 'column', background: '#6e6e6e' }}>
 
-                <Modal
-                  title="Confirmation"
-                  visible={isModalVisible}
-                  onOk={handleOk}
-                  onCancel={handleCancel}
-                >
-                    <p>You confirm and send your file successful</p>
-                </Modal>
 
-                <Upload 
-                  action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188"
-                  listType="text"
-                  maxCount={1}
+            <Space direction="vertical" style={{ width: '100%' }} size="large">
 
-                  
-                >
-                  <Button icon={<UploadOutlined />}>JOB Interview</Button>
+              <Button onClick={handleConfirmClick}>
+                {isConfirmed ? 'Confirmed' : 'Confirm and Sent'}
+              </Button>
 
-                </Upload>
-                
-                
-                <Upload
-                  action="https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188 "
-                  listType="text"
-                  maxCount={1}
-                  
-                >
-                  <Button icon={<UploadOutlined />}>Rejection Letter</Button>
-                
-                </Upload>
+              <div style={{ display: "flex", flexDirection: "row" }}>
+                <div>
 
-                
-              </Space>
+                  <input
+                    type="radio"
+                    name="status"
+                    checked={isPass}
+                    onChange={() => setIsPass(true)}
+                  />
+                  <label> Pass </label>
+                </div>
+
+                <div>
+
+                  <input
+                    type="radio"
+                    name="status"
+                    checked={isReject}
+                    onChange={() => setIsReject(true)}
+                  />
+                  <label> Reject </label>
+                </div>
+
+              </div>
+
+              <TextArea
+                rows={4}
+                placeholder="Enter Job Interview Detail or Enter Rejection Letter"
+                value={jobInterviewDetail}
+                onChange={(e) => setJobInterviewDetail(e.target.value)}
+              />
+
+
+              <Modal
+                title="Confirmation"
+                visible={isModalVisible}
+                onOk={handleOk}
+                onCancel={handleCancel}
+              >
+                <p>You confirm and send your file successful</p>
+              </Modal>
+
+
+            </Space>
 
           </Card>
 
         </div>
       </Layout>
 
+
     </Layout>
   );
 };
 
 export default CandidateSelection;
+
+
