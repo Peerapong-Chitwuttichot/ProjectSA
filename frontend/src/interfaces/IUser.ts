@@ -1,5 +1,5 @@
 export interface UsersInterface {
-  multiLineField: any;
+//   multiLineField: any;
   	ID?: number;
   	Position?: string;
 	Salary?: string;

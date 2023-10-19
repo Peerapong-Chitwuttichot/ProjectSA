@@ -16,6 +16,7 @@ import {
   TableProps,
   Drawer,
   Avatar,
+  Modal,
 } from "antd";
 import {
   AuditOutlined,
@@ -34,6 +35,8 @@ import {
   UserDeleteOutlined,
   UserAddOutlined,
   MenuOutlined,
+  DeleteOutlined,
+  EditOutlined,
 } from "@ant-design/icons";
 
 import "./style.css";
@@ -45,6 +48,8 @@ import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import { Header } from 'antd/es/layout/layout';
 import { Image } from 'antd';
 import { ColumnsType, ExpandableConfig } from 'antd/es/table/interface';
+import { DeletePost } from '../../../services/https';
+import { on } from 'events';
 const { TextArea } = Input;
 
 
@@ -56,6 +61,9 @@ function Candidatehome() {
   const [passwordError, setPasswordError] = useState('');
   const [posts, setPosts] = useState<UsersInterface[]>([]);
   const [deleteId, setDeleteId] = useState<Number>();
+  const [modalText, setModalText] = useState<String>();
+  const [open, setOpen] = useState(false);
+  const [opendelete, setOpenDelete] = useState(false);
 
   const getPosts = async () => {
     let res = await GetCandidatepost();
@@ -90,13 +98,39 @@ function Candidatehome() {
   //     tableLayout,
   //   };
 
+  const handleOkDelete = async () => {
+    try {
+      let res = await DeletePost(Number(deleteId));
+      if (res) {
+        messageApi.success("ลบข้อมูลสำเร็จ");
+        console.log(res);
+
+        setTimeout(() => {
+          window.location.href = "/candidatehome/home";
+        }, 1500);
+      } else {
+        let res = await DeletePost(Number(deleteId));
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCancleDelete = () => {
+    setOpenDelete(false);
+  };
+
+  const showModal = (val: UsersInterface) => {
+    setModalText(
+      `คุณต้องการลบ "${val.Matched}" หรือไม่ ?`
+    );
+    setDeleteId(val.ID);
+    setOpenDelete(true);
+  };
+
+
   const columns: ColumnsType<UsersInterface> = [
 
-    {
-      title: "ลำดับ",
-      dataIndex: "ID",
-      key: "id",
-    },
     {
       title: "หัวข้อประกาศงาน",
       dataIndex: "Matched",
@@ -130,6 +164,24 @@ function Candidatehome() {
       dataIndex: "Address",
       key: "Address",
     },
+    {
+      title: "จัดการ",
+      dataIndex: "Manage",
+      key: "manage",
+      render: (text, record, index) => (
+        <>
+
+          <Button
+            onClick={() => showModal(record)}
+            style={{ marginLeft: 10 }}
+            shape="circle"
+            icon={<DeleteOutlined />}
+            size={"large"}
+            danger
+          />
+        </>
+      ),
+    },
 
   ];
 
@@ -154,10 +206,11 @@ function Candidatehome() {
 
 
 
+
   const [size, setSize] = useState<SizeType>('large'); // default is 'middle'
 
   // ส่วนของ Header and sider // อยู่นอก return
-  const [open, setOpen] = useState(false);
+
   const showDrawer = () => {
     setOpen(true);
   };
@@ -189,6 +242,7 @@ function Candidatehome() {
           onClose={onClose}
           open={open}
           key="right"
+
         >
           <div >
 
@@ -269,7 +323,7 @@ function Candidatehome() {
 
         </Drawer>
 
-        <Header style={{ padding: 0, background: '#333333' }}>
+        <Header style={{ padding: 0, background: '#333333', width: '100%', height: "10%" }}>
           <div style={{
             display: 'flex',
             alignItems: 'center',
@@ -290,7 +344,7 @@ function Candidatehome() {
             <div style={{ flex: 1 }}></div> {/* เพิ่มพื้นที่ที่ว่างเพื่อทำให้ปุ่ม Logout ชิดขวา */}
 
             <Button onClick={showDrawer} icon={<MenuOutlined />} style={{
-              fontSize: '18px', fontWeight: 'bold', height: '5vh',
+              height: '5vh', fontSize: '18px', fontWeight: 'bold',
               marginTop: '0px', marginLeft: '20px'
             }}>
               MENU
@@ -302,70 +356,55 @@ function Candidatehome() {
       </Layout>
       {contextHolder}
       <Col xs={24} sm={24} md={24} lg={24} xl={24}>
-        <div className='img-back' style={{ display: "grid", placeItems: "center", height: "100vh" }}>
+        <div className='img-back' style={{ display: "grid", height: "91vh", width: "100%" }}>
           <Space direction="vertical" size="middle">
-            <Card style={{ height: "200px", marginBottom: "0px", }}>
-              <div className="label" style={{ marginLeft: "100px", marginRight: "10px" }}>
+            <Card style={{ display: "grid", placeItems: "center", width: "100%" }}>
+              <div className="label" >
                 <p className="div">
                   {/* <span className="space2"></span> */}
-                  <Row gutter={[16, 0]}>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={5}>
+                  <Row >
+                    <Col xs={8} sm={8} md={8} lg={8} xl={8}>
                       <Link to='/candidate/post'>
                         <Button style={{
                           fontSize: '50px', // เพิ่มขนาดของไอคอนเป็น 24px (หรือค่าที่คุณต้องการ)
                           fontWeight: 'bold',
-                          height: '14vh',
-                          marginTop: '1px',
-                          marginLeft: '150px',
+                          height: '100%',
+                          marginTop: '-5%',
+                          marginLeft: '-100%',
                         }}>
                           <FormOutlined style={{ color: 'green ' }} /> {/* คงความเหมือนเดิมของไอคอน */}
-
                         </Button>
-                        <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                      </Link>
+
+                    </Col>
+                    <Col xs={8} sm={8} md={8} lg={8} xl={8}>
+                      <Link to='/candidate/post'>
+                        <Button style={{
+                          fontSize: '50px', // เพิ่มขนาดของไอคอนเป็น 24px (หรือค่าที่คุณต้องการ)
+                          fontWeight: 'bold',
+                          height: '100%',
+                          marginTop: '-5%',
+                          marginLeft: '0%',
+                        }}>
+                          <CopyOutlined style={{ color: 'red' }} /> {/* คงความเหมือนเดิมของไอคอน */}
+                        </Button>
                       </Link>
                     </Col>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={5}>
-                      {/* <Link to='/candidate/post'> */}
-                      <Button style={{
-                        fontSize: '50px', // เพิ่มขนาดของไอคอนเป็น 24px (หรือค่าที่คุณต้องการ)
-                        fontWeight: 'bold',
-                        height: '14vh',
-                        marginTop: '1px',
-                        marginLeft: '275px',
-                      }}>
-                        <CopyOutlined style={{ color: 'red' }} /> {/* คงความเหมือนเดิมของไอคอน */}
-
-                      </Button>
-                      {/* </Link> */}
-                      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <Col xs={8} sm={8} md={8} lg={8} xl={8}>
+                      <Link to='/candidate/post'>
+                        <Button style={{
+                          fontSize: '50px', // เพิ่มขนาดของไอคอนเป็น 24px (หรือค่าที่คุณต้องการ)
+                          fontWeight: 'bold',
+                          height: '100%',
+                          marginTop: '-5%',
+                          marginLeft: '100%',
+                        }}>
+                          <SnippetsOutlined style={{ color: 'orange' }} /> {/* คงความเหมือนเดิมของไอคอน */}
+                        </Button>
+                      </Link>
                     </Col>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={5}>
-                      <Button style={{
-                        fontSize: '50px', // เพิ่มขนาดของไอคอนเป็น 24px (หรือค่าที่คุณต้องการ)
-                        fontWeight: 'bold',
-                        height: '14vh',
-                        marginTop: '1px',
-                        marginLeft: '425px',
-                      }}>
-                        <SnippetsOutlined style={{ color: 'orange' }} /> {/* คงความเหมือนเดิมของไอคอน */}
-
-                      </Button>
-                      <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                    </Col>
-
                   </Row>
 
-                  <Link to='/candidate/post' className='custom-button3' style={{ position: 'absolute', fontSize: '18px', marginLeft: '125px', color: 'green' }}>
-                    โพสต์ประกาศงาน
-                  </Link>
-
-                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ position: 'absolute', fontSize: '18px', marginLeft: '570px', color: 'red' }}>
-                    รายชื่อผู้สมัคร
-                  </Link>
-
-                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ position: 'absolute', fontSize: '18px', marginLeft: '990px', color: 'orange' }}>
-                    ดูประกาศงานฉบับร่าง
-                  </Link>
                   {/* <span className="space2"></span> */}
                 </p>
                 {/* <p className="image">
@@ -381,6 +420,28 @@ function Candidatehome() {
                 </p> */}
                 {/* <Divider /> */}
               </div>
+              <Row >
+                <Col xs={8} sm={8} md={8} lg={8} xl={8}>
+                  <text style={{ marginLeft: '-130%', fontSize: '16px', color: 'green' }}>โพสต์ประกาศงาน</text>
+                  {/* <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '-100%', fontSize: '16px', color: 'green' }}>
+                    <text>โพสต์ประกาศงาน</text>
+                  </Link> */}
+                </Col>
+                <Col xs={8} sm={8} md={8} lg={8} xl={8}>
+                  <text style={{ marginLeft: '-0%', fontSize: '16px', color: 'green' }}>รายชื่อผู้สมัคร</text>
+                  {/* <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '-0%', marginRight: '20px', fontSize: '16px', color: 'red' }}>
+                    <text>รายชื่อผู้สมัคร</text>
+
+                  </Link> */}
+                </Col>
+                <Col xs={8} sm={8} md={8} lg={8} xl={8}>
+                  <text style={{ marginLeft: '50%', fontSize: '16px', color: 'green' }}>ฉบับร่าง</text>
+                  {/* <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '100%', fontSize: '16px', color: 'orange' }}>
+                    <text>ฉบับร่าง</text>
+
+                  </Link> */}
+                </Col>
+              </Row>
             </Card>
             <Form
               name="basic"
@@ -427,10 +488,27 @@ function Candidatehome() {
           </Space>
         </div>
       </Col>
+      <Modal
+        title="ลบข้อมูล ?"
+        open={opendelete}
+        onOk={handleOkDelete}
+        // confirmLoading={confirmLoading}
+        onCancel={handleCancleDelete}
+      >
+        <p>{modalText}</p>
+      </Modal>
 
     </>
   );
 };
 
 export default Candidatehome;
+
+function showModal(record: UsersInterface): void {
+  throw new Error('Function not implemented.');
+}
+
+function setModalText(arg0: string) {
+  throw new Error('Function not implemented.');
+}
 

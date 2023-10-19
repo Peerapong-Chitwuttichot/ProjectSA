@@ -73,12 +73,12 @@ async function GetCandidatepost() {
 
   return res;
 }
-async function DeleteUserByID(id: Number | undefined) {
+async function DeletePost(id: Number | undefined) {
   const requestOptions = {
     method: "DELETE"
   };
 
-  let res = await fetch(`${apiUrl}/users/${id}`, requestOptions)
+  let res = await fetch(`${apiUrl}/candidateposts/delete/${id}`, requestOptions)
     .then((response) => response.json())
     .then((res) => {
       if (res.data) {
@@ -95,4 +95,5 @@ export {
   // GetUsers,
   CreateCandidatepost,
   GetCandidatepost,
+  DeletePost,
 };

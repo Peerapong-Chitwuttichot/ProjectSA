@@ -45,7 +45,7 @@ func ListCandidateposts(c *gin.Context) {
 // DELETE /candidateposts/:id
 func DeleteCandidatepost(c *gin.Context) {
 	id := c.Param("id")
-	if tx := entity.DB().Exec("DELETE FROM candidatepost_account WHERE candidatepost_id = ?", id); tx.RowsAffected == 0 {
+	if tx := entity.DB().Exec("DELETE FROM candidateposts WHERE id = ?", id); tx.RowsAffected == 0 {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "candidatepost not found"})
 		return
 	}
