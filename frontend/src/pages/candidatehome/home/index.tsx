@@ -41,7 +41,7 @@ import {
 
 import "./style.css";
 import { Link, useNavigate, } from "react-router-dom";
-import { UsersInterface } from "../../../interfaces/IUser";
+import { CandidateInterface } from "../../../interfaces/ICandidate";
 import { CreateCandidatepost } from "../../../services/https";
 import { GetCandidatepost } from "../../../services/https";
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
@@ -59,7 +59,7 @@ function Candidatehome() {
   const [messageApi, contextHolder] = message.useMessage();
   const [form] = Form.useForm();
   const [passwordError, setPasswordError] = useState('');
-  const [posts, setPosts] = useState<UsersInterface[]>([]);
+  const [posts, setPosts] = useState<CandidateInterface[]>([]);
   const [deleteId, setDeleteId] = useState<Number>();
   const [modalText, setModalText] = useState<String>();
   const [open, setOpen] = useState(false);
@@ -82,7 +82,7 @@ function Candidatehome() {
   //       Position: 'Position' ,
   //       Salary: `Salary ${i}`, 
   //       Dsecrition: `Description ${i}`,
-  //       Matched: `Matched ${i}`,
+  //       Topic: `Topic ${i}`,
   //       Address: `Address ${i}`,
   //     });
   //   }
@@ -120,21 +120,21 @@ function Candidatehome() {
     setOpenDelete(false);
   };
 
-  const showModal = (val: UsersInterface) => {
+  const showModal = (val: CandidateInterface) => {
     setModalText(
-      `คุณต้องการลบ "${val.Matched}" หรือไม่ ?`
+      `คุณต้องการลบ "${val.Topic}" หรือไม่ ?`
     );
     setDeleteId(val.ID);
     setOpenDelete(true);
   };
 
 
-  const columns: ColumnsType<UsersInterface> = [
+  const columns: ColumnsType<CandidateInterface> = [
 
     {
       title: "หัวข้อประกาศงาน",
-      dataIndex: "Matched",
-      key: "Matched",
+      dataIndex: "Topic",
+      key: "Topic",
     },
     {
       title: "ตำแหน่งที่ต้องการ",
@@ -187,7 +187,7 @@ function Candidatehome() {
 
 
 
-  const onFinish = async (values: UsersInterface) => {
+  const onFinish = async (values: CandidateInterface) => {
     try {
       const res = await CreateCandidatepost(values);
       if (res.status) {
@@ -344,7 +344,7 @@ function Candidatehome() {
             <div style={{ flex: 1 }}></div> {/* เพิ่มพื้นที่ที่ว่างเพื่อทำให้ปุ่ม Logout ชิดขวา */}
 
             <Button onClick={showDrawer} icon={<MenuOutlined />} style={{
-              height: '5vh', fontSize: '18px', fontWeight: 'bold',
+              height: '100%', fontSize: '18px', fontWeight: 'bold',
               marginTop: '0px', marginLeft: '20px'
             }}>
               MENU
@@ -420,26 +420,23 @@ function Candidatehome() {
                 </p> */}
                 {/* <Divider /> */}
               </div>
-              <Row >
+              <Row style={{ marginRight: '-50%'}}>
                 <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-                  <text style={{ marginLeft: '-130%', fontSize: '16px', color: 'green' }}>โพสต์ประกาศงาน</text>
-                  {/* <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '-100%', fontSize: '16px', color: 'green' }}>
+                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '-80%', fontSize: '16px', color: 'green' }}>
                     <text>โพสต์ประกาศงาน</text>
-                  </Link> */}
+                  </Link>
                 </Col>
                 <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-                  <text style={{ marginLeft: '-0%', fontSize: '16px', color: 'green' }}>รายชื่อผู้สมัคร</text>
-                  {/* <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '-0%', marginRight: '20px', fontSize: '16px', color: 'red' }}>
+                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '-35%', marginRight: '20px', fontSize: '16px', color: 'red' }}>
                     <text>รายชื่อผู้สมัคร</text>
 
-                  </Link> */}
+                  </Link>
                 </Col>
                 <Col xs={8} sm={8} md={8} lg={8} xl={8}>
-                  <text style={{ marginLeft: '50%', fontSize: '16px', color: 'green' }}>ฉบับร่าง</text>
-                  {/* <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '100%', fontSize: '16px', color: 'orange' }}>
+                  <Link to='/candidate/post' className='custom-button3' type="link" style={{ marginLeft: '12%', fontSize: '16px', color: 'orange' }}>
                     <text>ฉบับร่าง</text>
 
-                  </Link> */}
+                  </Link>
                 </Col>
               </Row>
             </Card>
@@ -504,7 +501,7 @@ function Candidatehome() {
 
 export default Candidatehome;
 
-function showModal(record: UsersInterface): void {
+function showModal(record: CandidateInterface): void {
   throw new Error('Function not implemented.');
 }
 

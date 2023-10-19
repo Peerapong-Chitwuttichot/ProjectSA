@@ -29,7 +29,7 @@ import {
 } from "@ant-design/icons";
 import "./style.css";
 import { Link, useNavigate, } from "react-router-dom";
-import { UsersInterface } from "../../../interfaces/IUser";
+import { CandidateInterface } from "../../../interfaces/ICandidate";
 import { CreateCandidatepost } from "../../../services/https";
 import type { SizeType } from 'antd/es/config-provider/SizeContext';
 import { Header } from 'antd/es/layout/layout';
@@ -52,7 +52,7 @@ function Candidatepost() {
     }
   }, [form]);
 
-  const onFinish = async (values: UsersInterface) => {
+  const onFinish = async (values: CandidateInterface) => {
     try {
       const res = await CreateCandidatepost(values);
       if (res.status) {
@@ -186,7 +186,7 @@ const handleLogout = () => {
           <div style={{ flex: 1 }}></div> {/* เพิ่มพื้นที่ที่ว่างเพื่อทำให้ปุ่ม Logout ชิดขวา */}
 
           <Button onClick={showDrawer} icon={<MenuOutlined />} style={{
-            fontSize: '18px', fontWeight: 'bold', height: '5vh',
+            fontSize: '18px', fontWeight: 'bold', height: '100%',
             marginTop: '0px', marginLeft: '20px'
           }}>
             MENU
@@ -200,11 +200,12 @@ const handleLogout = () => {
       <Col xs={24} sm={24} md={24} lg={24} xl={24}>
         <div className='img-back' style={{ display: "grid", placeItems: "center", height: "100vh" }}>
           <Space direction="vertical" size="middle">
-            <Card style={{ height: "130px", marginBottom: "-30px", }}>
+            <Card style={{ height: "30%", marginBottom: "-5%", placeItems: "center",}}>
+            <text style={{ height: "30%", marginLeft: "140px", placeItems: "center",fontSize: '32px',color: '#ff7518'}}>แบบฟอร์มสำหรับโพสต์งาน</text>
               <div className="label" style={{ marginLeft: "300px", marginRight: "300px" }}>
                 <p className="div">
                   {/* <span className="space2"></span> */}
-                  <span className="text-wrapper">แบบฟอร์มสำหรับโพสต์งาน</span>
+                  
                   <span className="span">&nbsp;</span>
                   {/* <span className="text-wrapper-2">สำหรับผู้หางาน</span>
                   <span className="space"></span> */}
@@ -259,7 +260,7 @@ const handleLogout = () => {
                   <Col xs={24} sm={24} md={24} lg={24} xl={24}>
                     <Form.Item
                       className="form-item-wrapper"
-                      name="matched"
+                      name="topic"
                       label="หัวข้อที่ต้องการ"
                       rules={[{
                         required: true,
@@ -270,7 +271,7 @@ const handleLogout = () => {
                   </Col>
 
                   <Row gutter={[16, 0]}>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={10}>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={12}>
                       <Form.Item
                         name="address"
                         label="สถานที่ทำงาน"
@@ -280,7 +281,7 @@ const handleLogout = () => {
                         }]}>
                         <Select placeholder="เลือกสถานที่ทำงาน"
                           // defaultValue="--เลือกสถานที่ทำงาน--"
-                          style={{ width: 300 }}
+                          style={{ width: 250 }}
                           optionLabelProp="label"
                           // onChange={handleChange}
                           options={[
@@ -367,17 +368,19 @@ const handleLogout = () => {
 
                       </Form.Item>
                     </Col>
-                    <Col xs={24} sm={24} md={24} lg={24} xl={10}>
+                    <Col xs={24} sm={24} md={24} lg={24} xl={12}>
                       <Form.Item
                         name="position"
+                        style={{ width: 250}}
                         label="ตำแหน่ง"
                         rules={[{
                           required: true,
                           message: 'กรุณาตำแหน่งงาน!'
+                          
                         }]}>
                         <Select placeholder="เลือกตำแหน่งงาน"
                           // defaultValue="--เลือกตำแหน่งงาน--"
-                          style={{ width: 300 }}
+                          
                           optionLabelProp="label"
                           // onChange={handleChange}
                           options={[

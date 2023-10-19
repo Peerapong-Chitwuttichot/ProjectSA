@@ -1,10 +1,10 @@
-export interface UsersInterface {
+export interface CandidateInterface {
 //   multiLineField: any;
   	ID?: number;
   	Position?: string;
 	Salary?: string;
 	Dsecrition?:  string;
 	// Posttimestamp?: string;
-	Matched?:  string;
+	Topic?:  string;
 	Address?:		  string;
 }

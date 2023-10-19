@@ -1,4 +1,4 @@
-import { UsersInterface } from "../../interfaces/IUser";
+import { CandidateInterface } from "../../interfaces/ICandidate";
 
 const apiUrl = "http://localhost:8080";
 
@@ -24,7 +24,7 @@ const apiUrl = "http://localhost:8080";
 //   return res;
 // }
 
-async function CreateCandidatepost(data: UsersInterface) {
+async function CreateCandidatepost(data: CandidateInterface) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -49,7 +49,7 @@ export interface DataType {
   Salary: string;
   Dsecrition: string;
   // Posttimestamp?: string;
-  Matched: string;
+  Topic: string;
   Address: string;
 }
 

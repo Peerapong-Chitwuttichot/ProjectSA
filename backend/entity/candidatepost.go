@@ -11,6 +11,6 @@ type Candidatepost struct {
 	Salary        string
 	Dsecrition    string
 	// Posttimestamp string
-	Matched       string
+	Topic       string
 	Address		  string
 }
