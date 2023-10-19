@@ -62,9 +62,10 @@ type Operator struct {
 type Notification struct {
     gorm.Model
 
-    Content string
     Read    bool
+	StatusNoti string
 
+	PassOrRejectionDetails string `gorm:"type:longtext"`
 
 	JobpostID *uint
 	Jobpost Jobpost `gorm:"foreignKey:JobpostID"`
@@ -96,9 +97,8 @@ type Jobpost struct {
 type CandidateSelection struct {
     gorm.Model
 
-    PassOrRejectionDetails string `gorm:"type:longtext"`
+	StatusCS  string
     Candidate              string `gorm:"type:longtext"`
-
 
 	JobpostID *uint
 	Jobpost Jobpost `gorm:"foreignKey:JobpostID"`

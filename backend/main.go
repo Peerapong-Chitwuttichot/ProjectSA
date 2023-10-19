@@ -18,12 +18,13 @@ func main() {
     r.GET("/candidate", controller.ListCandidate)
 	// r.GET("/jobpost", controller.ListJobpost)
 	// r.GET("/user", controller.GetUser)
-	r.POST("/notification", controller.CreateNotification)
+	// r.POST("/notification", controller.CreateNotification)
 	r.POST("/createcandidates", controller.CreateCandidate)
 
+
 	// นำเข้าเส้นทางจาก Controller
-	r.GET("/user/job/:id", controller.GetUserByJobID)
-	r.GET("/jobpost/user/:id", controller.GetJobpostByUserID)
+	// r.GET("/user/job/:id", controller.GetUserByJobID)
+	// r.GET("/jobpost/user/:id", controller.GetJobpostByUserID)
 
    
 	r.Run()

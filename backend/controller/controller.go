@@ -2,49 +2,98 @@ package controller
 
 import (
 	"net/http"
-	"github.com/gin-gonic/gin"
+
 	"github.com/NaruebeTh1/JOBJOB/entity"
+	"github.com/gin-gonic/gin"
 )
 
-
-// GET /user/job/:id
-func GetUserByJobID(c *gin.Context) {
-    jobID := c.Param("id")
-
-    var userData entity.User
-
-    if err := entity.DB().Raw("SELECT u.* FROM users u "+
-        "INNER JOIN work_has_users wu ON u.id = wu.user_id "+
-        "WHERE wu.jobpost_id = ?", jobID).Find(&userData).Error; err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{"data": userData})
-}
-
-// GET /jobpost/user/:id
-func GetJobpostByUserID(c *gin.Context) {
-    userID := c.Param("id")
-
-    var jobpostData entity.Jobpost
-
-    if err := entity.DB().Raw("SELECT jp.* FROM jobposts jp "+
-        "INNER JOIN work_has_users wu ON jp.id = wu.jobpost_id "+
-        "WHERE wu.user_id = ?", userID).Find(&jobpostData).Error; err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusOK, gin.H{"data": jobpostData})
-}
-
-
+/*
 // GET /WGU
+func ListCandidate(c *gin.Context) {
+	var workHasUsers []entity.WorkHasUser
+
+	if err := entity.DB().Preload("User").Preload("Jobpost").
+		Find(&workHasUsers).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// สร้างข้อมูลที่จะแสดงในหน้าเว็บ
+	var result []gin.H
+	for _, workHasUser := range workHasUsers {
+		data := gin.H{
+			"UserID":   workHasUser.User.ID,
+			"UserName": workHasUser.User.Title_name + ". " + workHasUser.User.First_name + " " + workHasUser.User.Last_name,
+			"Position": workHasUser.Jobpost.Position,
+			"Detail":   workHasUser.User.Experience + ", " + workHasUser.User.Skill,
+            "JobpostID" : workHasUser.JobpostID,
+		}
+		result = append(result, data)
+	}
+
+	c.JSON(http.StatusOK, gin.H{"data": result})
+}
+
+
+
+func CreateCandidate(c *gin.Context) {
+	var inputData []struct {
+		User_id    *uint  `json:"User_id"`
+		JobpostID *uint  `json:"JobpostID"`
+		Status_cs string `json:"Status_cs"`
+		UserName  string `json:"candidate"`
+        Pass_or_rejection_details   string `json:"Pass_or_rejection_details"`
+	}
+
+	if err := c.ShouldBindJSON(&inputData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	// สร้าง CandidateSelection จากข้อมูลที่รับมา
+	candidateSelections := []entity.CandidateSelection{}
+	for _, data := range inputData {
+		candidateSelection := entity.CandidateSelection{
+			StatusCS:  data.Status_cs,
+			JobpostID: data.JobpostID,
+			Candidate: data.UserName, // เพิ่มรายชื่อใน CandidateSelection
+		}
+		candidateSelections = append(candidateSelections, candidateSelection)
+	}
+
+	if err := entity.DB().Create(&candidateSelections).Error; err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+    // สร้าง Notification
+	notifications := []entity.Notification{}
+    for _, data := range inputData {
+        notification := entity.Notification{
+            StatusNoti:                 data.Status_cs,
+            JobpostID:                  data.JobpostID,
+            PassOrRejectionDetails:     data.Pass_or_rejection_details,
+            UserID:                     data.User_id, 
+            Read:                       false,
+        }
+        notifications = append(notifications, notification)
+    }
+
+    if err := entity.DB().Create(&notifications).Error; err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+
+	c.JSON(http.StatusOK, gin.H{"data": "Candidate selection and notification created successfully"})
+}
+*/
+
 func ListCandidate(c *gin.Context) {
     var workHasUsers []entity.WorkHasUser
 
-    if err := entity.DB().Preload("User").Preload("Jobpost").Find(&workHasUsers).Error; err != nil {
+    if err := entity.DB().Preload("User").Preload("Jobpost").Where("status = 0").
+        Find(&workHasUsers).Error; err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
@@ -53,10 +102,11 @@ func ListCandidate(c *gin.Context) {
     var result []gin.H
     for _, workHasUser := range workHasUsers {
         data := gin.H{
-            "UserID"  :  workHasUser.User.ID,
-            "UserName":  workHasUser.User.Title_name + ". " + workHasUser.User.First_name + " " + workHasUser.User.Last_name,
-            "Position":  workHasUser.Jobpost.Position,
-            "Detail"  :  workHasUser.User.Experience + ", " + workHasUser.User.Skill,
+            "UserID":   workHasUser.User.ID,
+            "UserName": workHasUser.User.Title_name + ". " + workHasUser.User.First_name + " " + workHasUser.User.Last_name,
+            "Position": workHasUser.Jobpost.Position,
+            "Detail":   workHasUser.User.Experience + ", " + workHasUser.User.Skill,
+            "JobpostID" : workHasUser.JobpostID,
         }
         result = append(result, data)
     }
@@ -64,14 +114,13 @@ func ListCandidate(c *gin.Context) {
     c.JSON(http.StatusOK, gin.H{"data": result})
 }
 
-
-
-// POST /notification
-func CreateNotification(c *gin.Context) {
-    var inputData struct {
-        UserID     *uint   `json:"user_id"`
-        JobpostID  *uint   `json:"jobpost_id"`
-        Content    string `json:"content"`
+func CreateCandidate(c *gin.Context) {
+    var inputData []struct {
+        User_id    *uint  `json:"User_id"`
+        JobpostID *uint  `json:"JobpostID"`
+        Status_cs string `json:"Status_cs"`
+        UserName  string `json:"candidate"`
+        Pass_or_rejection_details   string `json:"Pass_or_rejection_details"`
     }
 
     if err := c.ShouldBindJSON(&inputData); err != nil {
@@ -79,37 +128,55 @@ func CreateNotification(c *gin.Context) {
         return
     }
 
-    // สร้าง Notification จากข้อมูลที่รับมา
-    notification := entity.Notification{
-        UserID:    inputData.UserID,
-        JobpostID: inputData.JobpostID,
-        Content:   inputData.Content,
-        Read:      false, // รองรับการอ่านหรือไม่ (อาจต้องแก้ไขตามความต้องการ)
+    // สร้าง CandidateSelection จากข้อมูลที่รับมา
+    candidateSelections := []entity.CandidateSelection{}
+    for _, data := range inputData {
+        candidateSelection := entity.CandidateSelection{
+            StatusCS:  data.Status_cs,
+            JobpostID: data.JobpostID,
+            Candidate: data.UserName,
+        }
+        candidateSelections = append(candidateSelections, candidateSelection)
     }
 
-    if err := entity.DB().Create(&notification).Error; err != nil {
+    if err := entity.DB().Create(&candidateSelections).Error; err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
     }
 
-    c.JSON(http.StatusOK, gin.H{"data": notification})
+    // อัพเดต workhasuser ให้ status เป็น true
+    for _, data := range inputData {
+        workHasUser := &entity.WorkHasUser{}
+        if err := entity.DB().Where("user_id = ? AND jobpost_id = ?", data.User_id, data.JobpostID).First(workHasUser).Error; err != nil {
+            
+            c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+            return
+        }
+        if !workHasUser.Status {
+            if err := entity.DB().Model(workHasUser).Update("Status", true).Error; err != nil {
+                c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+                return
+            }
+        }
+    }
+
+    // สร้าง Notification
+    notifications := []entity.Notification{}
+    for _, data := range inputData {
+        notification := entity.Notification{
+            StatusNoti:                 data.Status_cs,
+            JobpostID:                  data.JobpostID,
+            PassOrRejectionDetails:     data.Pass_or_rejection_details,
+            UserID:                     data.User_id,
+            Read:                       false,
+        }
+        notifications = append(notifications, notification)
+    }
+
+    if err := entity.DB().Create(&notifications).Error; err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    c.JSON(http.StatusOK, gin.H{"data": "Candidate selection and notification created successfully"})
 }
-
-// POST /candidates
-func CreateCandidate(c *gin.Context) {
-    var candidate entity.User
-
-    if err := c.ShouldBindJSON(&candidate); err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    // สร้างผู้สมัครใหม่ในฐานข้อมูล
-    if err := entity.DB().Create(&candidate).Error; err != nil {
-        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-        return
-    }
-
-    c.JSON(http.StatusCreated, gin.H{"data": candidate})
-}
-
