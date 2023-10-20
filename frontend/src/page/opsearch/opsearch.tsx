@@ -162,7 +162,7 @@ function Opsearch() {
 
             <div className='d-flex justify-content-between align-items-center sticky-top' style={style.nav}>
                 <div className="d-flex">
-                    <a href="">
+                    <a href="/">
                         <img src={logo} alt="" style={style.logo} />
                     </a>
                     <div>

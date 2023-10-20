@@ -1,4 +1,3 @@
-import { log } from "console";
 import { RegWorkInterface } from "../../interfaces/IRegWork";
 
 const apiUrl = "http://localhost:8080";
@@ -76,7 +75,7 @@ async function GetLatestWHU() {
     .then((response) => response.json())
     .then((res) => {
       if (res.whul) {
-        if (res.whul.length == 0) {
+        if (res.whul.length === 0) {
           const start = {
             "ID": 0,
             "Position": "",
@@ -125,7 +124,7 @@ const UploadImage = (file: File, whu_id: number) => {
 // Search
 async function SearchWork(key: String) {
   key = key.trim();
-  if (key == "") {
+  if (key === "") {
     key = "ASd3kfds#23fghs5yege4tv4tq4tq34t"
   }
   const requestOptions = {

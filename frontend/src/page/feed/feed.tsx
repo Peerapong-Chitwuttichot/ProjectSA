@@ -7,16 +7,14 @@ import { useEffect, useState, KeyboardEvent } from 'react';
 import { style } from "./feedcss"
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import Swal from 'sweetalert2'
-import { message } from "antd";
 import { CreateRegWork } from "../../service/https/feed.service";
-import { useNavigate } from "react-router-dom";
 import { SearchWork } from "../../service/https/feed.service"
 import { Helmet } from 'react-helmet';
 
 function Feed() {
 
     // const navigate = useNavigate();
-    const [messageApi, contextHolder] = message.useMessage();
+    // const [messageApi, contextHolder] = message.useMessage();
     const userID = 123;
 
     // Last Post id
@@ -111,16 +109,8 @@ function Feed() {
         let res = await CreateRegWork(data);
         if (res.status) {
             console.log("Create Success!!!")
-            messageApi.open({
-                type: "success",
-                content: "บันทึกข้อมูลสำเร็จ",
-            });
         } else {
             console.log("Create Error!!!")
-            messageApi.open({
-                type: "error",
-                content: "บันทึกข้อมูลไม่สำเร็จ",
-            });
         }
     }
 
@@ -238,7 +228,7 @@ function Feed() {
 
             <div className='d-flex justify-content-between align-items-center sticky-top' style={style.nav}>
                 <div className="d-flex">
-                    <a href="">
+                    <a href="/">
                         <img src={logo} alt="" style={style.logo} />
                     </a>
                     <div>
